@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="main" ng-controller="_main_controller">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; frame-src https://*; img-src 'self' data:">
+  <title></title>
+  <!-- Styles -->
+  <link rel="stylesheet" href="../node_modules/@mdi/font/css/materialdesignicons.css">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="../node_modules/highlight.js/styles/github.css">
+</head>
+
+<body>
+  <div class="w-100 fixed-top">
+    <div class="d-flex justify-content-end p-1 bg-secondary">
+      <div class="w-100 d-flex align-items-center pl-2 text-light" ng-style="{'-webkit-app-region': 'drag'}">
+        <span class="bg-light text-dark px-1"><b class="text-uppercase">{{project.name}}</b></span>
+      </div>
+      <div class="d-flex p-1">
+        <button id="minimize" ng-click="minimize()" class="btn btn-sm btn-dark ripple mr-1" ng-style="{'width': '5rem'}"><span class="mdi mdi-window-minimize"></span></button>
+        <button id="maximize" ng-click="maximize()" class="btn btn-sm btn-dark ripple mr-1" ng-style="{'width': '5rem'}"><span class="mdi mdi-window-maximize"></span></button>
+        <button id="close" ng-click="close()" class="btn btn-sm btn-dark border-0 hover-danger ripple" ng-style="{'width': '5rem'}"><span class="mdi mdi-close"></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="bg-dark py-2" ng-style="{'margin-top': '48px'}">
+    <div class="container">
+      <div id="navbar" ng-include="'./components/_main/views/templates/navbar.html'"></div>
+    </div>
+  </div>
+  <div id="main" ng-style="{'height': 'calc(100vh - 150px)', 'overflow-y': 'scroll', 'padding-bottom': '50vh'}">
+    <div class="container">
+      <div id="view" ng-view></div>
+    </div>
+  </div>
+  <div class="bg-light fixed-bottom py-1 px-1 border">
+    <div ng-include="'./components/_main/views/templates/location.html'"></div>
+  </div>
+</body>
+
+<script src="./index.js"></script>
+
+</html>

@@ -1,0 +1,20 @@
+{
+  "appname": "main",
+  "root": "_main",
+  "controller_postfix": "_controller",
+  "route_postfix": "_route",
+  "components": [{
+    "name": "_main",
+    "controllers": ["_main_controller"],
+    "routes": ["home_route", "_main_route"],
+    "filters": ["falsey", "truthy"]
+  }, {
+    "name": "404",
+    "controllers": ["404_controller"],
+    "routes": ["404_route"]
+  }, {
+    "name": "about",
+    "controllers": ["about_controller"],
+    "routes": ["about_route"]
+  }]
+}
