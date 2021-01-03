@@ -68,7 +68,7 @@ function create_window(options) {
     height: options.height,
     minWidth: options.min_width,
     minHeight: options.min_height,
-    icon: path.join(__dirname, 'resources/aahkman.ico'),
+    icon: path.join(__dirname, 'resources/icon.ico'),
     frame: false,
     // resizable: false,
     webPreferences: {
