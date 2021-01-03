@@ -184,7 +184,7 @@ class Scriptoid {
         return
       } else {
         // only copy newer files if no edits were made
-        if (fs.lstatSync(this.target).mtimeMs < fs.lstatSync(this.source)) {
+        if (fs.lstatSync(this.target).mtimeMs < fs.lstatSync(this.source).mtimeMs) {
           fs.outputFileSync(this.target, data)
           edited++
           return
