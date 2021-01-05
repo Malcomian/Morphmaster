@@ -46,7 +46,7 @@
     "electron-builder": "^22.9.1"
   },
   "keywords": ["AngularJS", "Bootstrap", "electron", "node", "morphmaster", "morph"],
-  "author": "",
+  "author": "Malcolm Wyatt-Mair",
   "license": "ISC",
   "build": {
     "appId": "morphmaster",
