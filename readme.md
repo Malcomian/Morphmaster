@@ -6,7 +6,7 @@ A special framework for building electron applications with AngularJS and Bootst
 
 The main feature of this framework is the inclusion of a few command-line utilities that can add some special functionality to your build environment and speed up production.
 
-Here's the typical setup process: first, create a new folder with the name of the project that you want. Then, unzip the contents of this project to that folder. Then, run `npm run morph` to change some of the basic project information in `package.json`. Then you can start generating components based on the application structure that you need or carry on as normal in your development process.
+Here's the typical setup process: first, create a new folder with the name of the project that you want. Then, unzip the contents of this project to that folder and run `npm install` to download all the node modules used in this project. Then, run `npm run morph` to change some of the basic project information in `package.json`. Then you can start generating components based on the application structure that you need or carry on as normal in your development process.
 
 The current project structure is set up in "build mode". You can either run `watch.js` with `npm run watch` or you can manually build the project after creating or editing files and directories inside of the `src` folder with `npm run build`. You can then start the app in another termainl with `npm start`, which runs `electron .`. See below for more details on the different scripts and setups available.
 
