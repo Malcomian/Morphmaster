@@ -223,9 +223,9 @@ program
   .action((name, url) => generate(name, url))
 
 program
-  .command('add <component> <folder> <filename> [url]')
-  .description('adds new file to target component folder structure given the type of directory. Ex: $ add "_main" routes home_route.js //home')
-  .action((component, folder, filename, url) => add(component, folder, filename, url))
+  .command('add <component> <folder> <filename> [url] [controller] [template]')
+  .description('adds new file to target component folder structure given the type of directory. Ex: $ add "_main" routes home_route.js //home home_controller home')
+  .action((component, folder, filename, url, controller, template) => add(component, folder, filename, url, controller, template))
 
 program
   .command('remap')
@@ -456,7 +456,7 @@ function generate(name, url) {
   }
   // create folder structure
   fs.outputFileSync(`${target}\\controllers\\${name}${controller_postfix}.js`, require('./lib/controller')())
-  fs.outputFileSync(`${target}\\routes\\${name}${route_postfix}.js`, require('./lib/route')(name, controller_postfix, url))
+  fs.outputFileSync(`${target}\\routes\\${name}${route_postfix}.js`, require('./lib/route')(name, controller_postfix, url, name, name))
   fs.outputFileSync(`${target}\\views\\pages\\${name}.html`, require('./lib/html')(name))
   // remap() // disabled because of watcher
 }
@@ -468,7 +468,7 @@ function generate(name, url) {
  * @param {String} filename name of the file
  * @param {String} url optional URL string for defining route files
  */
-function add(component, folder, filename, url) {
+function add(component, folder, filename, url, controller, template) {
   folder = folder.split('/').join('\\') // replace all slashes with backslashes for folder path
   let target = `${path.resolve('./src/components')}\\${component}`
   switch (folder) {
@@ -476,7 +476,7 @@ function add(component, folder, filename, url) {
       fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/controller')())
       break;
     case 'routes':
-      fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/route')(component, controller_postfix, url))
+      fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/route')(component, controller_postfix, url, controller, template))
       break;
     case 'services':
       fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/service')())
