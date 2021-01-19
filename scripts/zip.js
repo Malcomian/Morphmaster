@@ -66,7 +66,7 @@ function zip() {
   output_path.pop()
   output_path = output_path.join('\\')
 
-  cmd.exec(`"%ProgramFiles%\\7-Zip\\7z.exe" a "${output_path}\\${name}" ..\\${dirname}\\* -x!node_modules -x!dist -x!build`, (error, stdout, stderr) => {
+  cmd.exec(`"%ProgramFiles%\\7-Zip\\7z.exe" a "${output_path}\\${name}" ..\\${dirname}\\* -x!node_modules -x!dist -x!build -x!.git`, (error, stdout, stderr) => {
     if (error) {
       console.error(`error: ${error}`)
       return
