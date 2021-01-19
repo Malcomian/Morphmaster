@@ -73,7 +73,7 @@ console.log('this will be inserted at build!')
 /*...*/
 ```
 
-As a side note, I thought it'd be worthwhile to mention that these patterns are meant to be typed using only one hand on a number pad.
+As a side note, I thought it'd be worthwhile to mention that - for convenience - these patterns are meant to be typed using only one hand on a number pad.
 
 #### Build
 
