@@ -354,6 +354,7 @@ function end() {
 function generate(name, url) {
   console.log(`generating component ${name} at "${url}"...`)
 
+  // ! the relative path to the components folder is unfortunately hard coded here...
   let target = `${path.resolve('./src/components')}\\${name}`
   if (fs.existsSync(target)) {
     console.log(`folder already exists`)
