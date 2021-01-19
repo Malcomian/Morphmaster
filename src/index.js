@@ -1,6 +1,6 @@
-// ! REMOVE ! //
+/*---*/
 console.log(`Remove this at build!`)
-// ! END-REMOVE ! //
+/*...*/
 
 const {
   shell,
@@ -30,7 +30,7 @@ env.reload(remote.getGlobal('env'))
 const Server = require('./models/server');
 var server = new Server();
 
-// ! REMOVE ! //
+/*---*/
 console.log(`Remove this at build!`)
 module.exports = {
   shell: shell,
@@ -46,4 +46,4 @@ module.exports = {
   env: env,
   server: server,
 }
-// ! END-REMOVE ! //
+/*...*/

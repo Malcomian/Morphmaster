@@ -45,71 +45,39 @@ npm run update-version set 0.0.1
 
 ### Evoke
 
-The evoke script is a command line interface utility that can either rewrite javascript files within a given folder or transpile a given folder to another location. It will look for special comment lines and either "comment in" or "comment out" those sections. The main idea is that this method allows for special imports between javascript files that wouldn't normally be able to import or export their code. This allows the developer a type of on-demand special intellisense. There are a couple of different ways to utilize this feature.
+The evoke script is a command line interface utility that can transpile a source directory into a build directory but with some special features in regards to javascript files. It will look for special comment lines and either "comment in" or "comment out" those sections based on some simple patterns. The main idea is that this feature allows for special imports between javascript files that wouldn't normally be able to import or export their code. This allows the developer a type of on-demand special intellisense.
 
-#### On/Off/Toggle
+For inserting and removing multiple lines, start with `/*+++*/` for inserting code and `/*---*/` for removing code. End these sections with `/*...*/`. Everything between these lines will either be inserted (whereby double slash comments will be removed from the start of the line) or removed (whereby double slash comments will be added to the start of the line). Note that these lines only need to start with these patterns (ignoring any leading space or tab characters), which can be helpful for extra comments.
 
-Folders can be manually turned on or off or even toggled. It is recommended to use the `toggle` option because if you run the on/off options they will continue to add or remove comments between any special comment sections. `package.json` will be rewritten each time with the `toggle` property set to `on` or `off` each time the toggle script is run.
-
-By default, special comment sections that remove code (comment out) start with `// ! REMOVE ! //` and end with `// ! END-REMOVE ! //`, and sections that add code (comment in) start with `// ! INSERT ! //` and end with `// ! END-INSERT ! //` - all of which can be edited within the evoke.js script.
-
-Anything between the lines of code that match the remove/insert comment strings will be commented in or out depending on which script was run (on/off/toggle). It's cool to use this to export the contents of an index javascript file (or a file that is included in your main html file) so that any scripts that run inside of that index file can then import the main index file's contents, which can help with intellisense support inside of your development environment. Likewise, the insert method can help with altering the way your intellisense works with things like function parameters - particularly in regards to the `$scope` and `$rootScope` services within Angular. Function parameters generally don't have an explicit type within javascipt - especially when it comes to Angular's dependency injection features. This means that one cannot normally see other methods that are attached to the `$scope` object inside of a controller function - which is pretty lame, to say the least. But, if you use the insert and remove methods, you can restore the basic object intellisense for these objects.
-
-Example Javascript file `./src/components/_main/controllers/_main_controller.js`:
+**Example:** look at the following example source code:
 
 ```javascript
-module.exports = function ($scope, $rootScope) {
-  // ! INSERT ! //
-  // var vm = $scope // set vm equal to $scope when in production
-  // var root = $rootScope // set root equal to $rootScope in production
-  // ! END-INSERT ! //
-  // ! REMOVE ! //
-  var vm = {} // initialize scope object as a basic object in development
-  var root = {} // initialize root scope object as a basic object in development
-  // ! END-REMOVE ! //
-  // ...
-  // ! REMOVE ! //
-  module.exports = root // rewrite the module exports to be the root scope object
-  // ! END-REMOVE ! //
-}
+/*+++*/
+// console.log('this will be inserted at build!')
+/*...*/
+
+/*---*/
+console.log('this will be removed at build!')
+/*...*/
 ```
 
-Note: Most commands have an alias saved in the `package.json` scripts section for easy access.
-
-```bash
-npm run toggle
-# or
-npm run evoke toggle "./src"
-# or
-npm run "./scripts/evoke.js" toggle "./src"
-```
-
-Running one of the commands above with the given example javascript file will generate the following:
+When the project builds, the code will turn into the following:
 
 ```javascript
-module.exports = function ($scope, $rootScope) {
-  // ! INSERT ! //
-  var vm = $scope // set vm equal to $scope when in production
-  var root = $rootScope // set root equal to $rootScope in production
-  // ! END-INSERT ! //
-  // ! REMOVE ! //
-  // var vm = {} // initialize scope object as a basic object in development
-  // var root = {} // initialize root scope object as a basic object in development
-  // ! END-REMOVE ! //
-  // ...
-  // ! REMOVE ! //
-  // module.exports = root // rewrite the module exports to be the root scope object
-  // ! END-REMOVE ! //
-}
+/*+++*/
+console.log('this will be inserted at build!')
+/*...*/
+
+/*---*/
+// console.log('this will be removed at build!')
+/*...*/
 ```
 
-Using the above setup, the developer can easily see what is set on the $rootScope object (which is set up in the `_main_controller.js` file) from inside of any other controller file just by requiring it inside of a special comment section at the beginning of that controller file.
+As a side note, I thought it'd be worthwhile to mention that these patterns are meant to be typed using only one hand on a number pad.
 
 #### Build
 
-Obviously, the app will naturally error out when you launch or reload it while certain comment sections are still turned on. Running the toggle script can be useful for enabling this sort of special intellisense for a moment, but it must be turned off again before you refresh or reload the app as it's running.
-
-That's why I included the `build` command.
+To build and run the project, run the `build` project script, which is currently set to `node ./scripts/evoke.js "./src" "./build"`.
 
 ```bash
 npm run build
@@ -117,14 +85,7 @@ npm run build
 npm run evoke build "./src" "./build"
 ```
 
-The build command will still scan the given source directory for javascript files that contain the special comment sections. It will then comment out those sections and output the exact same folder and file structure to the target directory (but will also only copy files that are newer in the source folder than the target build folder). All that needs to change is which html file `main.js` points to when it loads the app.
-
-```javascript
-// for "build mode"
-win.loadFile(path.join(__dirname, './build/index.html'))
-// for "manual mode"
-win.loadFile(path.join(__dirname, './src/index.html'))
-```
+The build command will scan the given source directory for javascript files that contain any special comment sections. It will then comment out those sections and output the exact same folder and file structure to the target directory (but will also only copy files that are newer in the source folder than the target build folder).
 
 It may behoove the developer to manually exclude their target build folder from their IDE's file explorer and search menus. Otherwise you'll see the duplicate folder structure, and that's not something that needs to be edited.
 
@@ -146,10 +107,11 @@ The gen command creates AngularJS components based on some simple templates incl
 
 ```bash
 # Note that in bash, a single slash must be escaped as a double slash or else it returns a specific path string
+# ... that is, unless there's another slash in the string
 # gen <name> <url>
 npm run gen "home" //home
 npm run gen "users" //users
-npm run gen "user" //users/:user
+npm run gen "user" /users/:user
 ```
 
 Once complete, the evoke script will then remap the entire component structure and output it as a JSON file at `./src/models/.app.json`. This file is what the server file uses to register all the controllers, routes, filters, services, and directives when first creating the angular application. Some route files ought to be manually changed, as in the case of the `.otherwise` route condition. The current project includes a "404" route as an example.
@@ -286,7 +248,7 @@ The following are some notable features implemented in the current base project.
 
 **New Window:** Any link in the app can open the same app in a new window. `ctrl + left click`, `shift + left click`, and `middle mouse click` can open a new instance of the app at the link's target location. Any link that starts with "http" will open the user's default internet browser at the link's target location.
 
-**Uniform Resource Locator:** The app allows spaces in the url of the location bar and escapes the root `#!` url prefix. Check `_main_controller.js` to see how some basic location bar functionality was added. Note that any double spaces will be changed to single spaces. This is kind of a neat feature for the purpose of using special URL strings that can represent filenames as route params, although not all types of characters are escaped - just single spaces. Be wary of the naming conventions used for components - I'd recommend only using lowercase and spaces and dashes in component names and any filenames that may be used in the URL.
+**Uniform Resource Locator:** The app allows spaces in the URL of the location bar and escapes the root `#!` URL prefix. Check `_main_controller.js` to see how some basic location bar functionality was added. Note that any double spaces will be changed to single spaces. This is kind of a neat feature for the purpose of using special URL strings that can represent filenames as route params, although not all types of characters are escaped - just single spaces. Be wary of the naming conventions used for components - I'd recommend only using lowercase and spaces and dashes in component names and any filenames that may be used in the URL.
 
 **Angular-VS-Repeat:** A cool package that can change the way repeated elements are displayed within an AngularJS app. It will dramatically decrease load times and search/filtering speeds for very large data sets (like 1,000+ items in a single table). See the [official documentation](https://github.com/kamilkp/angular-vs-repeat) for more details on how to use it. (and yes, the demo page is broken for some reason, but the script actually works)
 
@@ -318,7 +280,6 @@ The following is a list of packages used in this project.
 * **[jquery](https://jquery.com/):** I'd be equally surprised and impressed if you haven't heard of it. Required for AngularJS apps.
 * **[js-beautify](https://beautifier.io/):** A library to beautify javascripts. Required for `evoke.js`.
 * **[markdown-it](https://www.npmjs.com/package/markdown-it):** A library for rendering markdown files as HTML.
-* **[klaw-sync](https://www.npmjs.com/package/klaw-sync):** A utility for recursively scanning directories. Required for `evoke.js`.
 * **[mousetrap](https://www.npmjs.com/package/mousetrap):** A library for rebinding hotkeys. Includes options for "global" keybinds that work even when the user is focused inside of text inputs.
 * **[popper.js](https://www.npmjs.com/package/popper.js):** Required for Bootstrap's javascript library. Enables tooltips.
 

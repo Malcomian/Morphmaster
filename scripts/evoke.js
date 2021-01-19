@@ -1,7 +1,6 @@
 var start = new Date().getMilliseconds()
 
 const fs = require('fs-extra')
-const walk = require('klaw-sync')
 const path = require('path')
 
 var project = require('../package.json')
@@ -19,198 +18,176 @@ const route_postfix = '_route' // the extension string for router files, ex: "_m
 
 var edited = 0
 var copied = 0
-var deleted = 0
+
+class Node {
+  /**
+   * Node - an object for storing information about a file or folder
+   * @param {string} name name of the file or folder
+   * @param {string} path full path to the file or folder
+   * @param {('file'|'folder')} type either file or folder
+   * @returns {object} a node object containing the name, path, and type of node
+   */
+  constructor(name, path, type) {
+    this.name = name
+    this.path = path
+    this.type = type
+  }
+  /**
+   * Returns true if the node is a directory. Alias of isFolder()
+   */
+  isDirectory() {
+    return (this.type == 'folder' ? true : false)
+  }
+  /**
+   * Returns true if the node is a folder. Alias of isDirectory()
+   */
+  isFolder() {
+    return (this.type == 'folder' ? true : false)
+  }
+  /**
+   * Returns true if the node is a file
+   */
+  isFile() {
+    return (this.type == 'file' ? true : false)
+  }
+}
 
 class Scriptoid {
   /**
-   * Scriptoid - a class for processing special comments in a javascript file
-   * @param {String} filename name of the file
-   * @param {String} source source folder path
+   * Scriptoid - inserts and removes comments based on specific patterns
+   * @param {string} source full path to source file
+   * @param {string} target full path to target file
    */
-  constructor(filename, source) {
-    this.filename = filename
+  constructor(source, target) {
     this.source = source
+    this.target = target
     this.contents = ''
-    this.target = ''
-    this.edit = false // boolean to check if this scriptoid instance has been edited
-    this.remove_start = `// ! REMOVE ! //`
-    this.remove_end = `// ! END-REMOVE ! //`
-    this.reinsert_start = `// ! INSERT ! //`
-    this.reinsert_end = `// ! END-INSERT ! //`
-  }
-  process(mode) {
-    this.contents = fs.readFileSync(this.source).toString()
-    let data = null
-    switch (mode) {
-      case 'on':
-        data = this.uncomment(this.contents)
-        data = this.uninsert(data)
-        break;
-      case 'off':
-        data = this.comment(this.contents)
-        data = this.reinsert(data)
-        break;
-      case 'build':
-        data = this.comment(this.contents)
-        data = this.reinsert(data)
-        break;
-      default:
-        console.error(`couldn't process file mode`)
-        return
-        break;
-    }
-    this.save(data)
-  }
-  uncomment(source) {
-    let contents = source.split('\n')
-    let found = false
-    for (let i = 0; i < contents.length; i++) {
-      const element = contents[i];
-      let whitespaces = this.slurp(element)
-      let spacer = element.slice(0, whitespaces)
-      if (element.startsWith(`${spacer}${this.remove_start}`)) {
-        found = true
-        continue
-      }
-      if (element.startsWith(`${spacer}${this.remove_end}`)) {
-        found = false
-        continue
-      }
-      if (found == true) {
-        if (contents[i].startsWith(`${spacer}// `)) {
-          this.edit = true
-          contents[i] = contents[i].replace(`${spacer}// `, spacer)
-        }
-        continue
-      }
-    }
-    contents = contents.join('\n')
-    return contents
-  }
-  comment(source) {
-    let contents = source.split('\n')
-    let found = false
-    for (let i = 0; i < contents.length; i++) {
-      const element = contents[i];
-      let whitespaces = this.slurp(element)
-      let spacer = element.slice(0, whitespaces)
-      if (element.startsWith(`${spacer}${this.remove_start}`)) {
-        found = true
-        continue
-      }
-      if (element.startsWith(`${spacer}${this.remove_end}`)) {
-        found = false
-        continue
-      }
-      if (found == true) {
-        this.edit = true
-        contents[i] = `// ${element}`
-        continue
-      }
-    }
-    contents = contents.join('\n')
-    return contents
-  }
-  reinsert(source) {
-    let contents = source.split('\n')
-    let found = false
-    for (let i = 0; i < contents.length; i++) {
-      const element = contents[i];
-      let whitespaces = this.slurp(element)
-      let spacer = element.slice(0, whitespaces)
-      if (element.startsWith(`${spacer}${this.reinsert_start}`)) {
-        found = true
-        continue
-      }
-      if (element.startsWith(`${spacer}${this.reinsert_end}`)) {
-        found = false
-        continue
-      }
-      if (found == true) {
-        if (contents[i].startsWith(`${spacer}// `)) {
-          this.edit = true
-          contents[i] = contents[i].replace(`${spacer}// `, spacer)
-        }
-        continue
-      }
-    }
-    contents = contents.join('\n')
-    return contents
-  }
-  uninsert(source) {
-    let contents = source.split('\n')
-    let found = false
-    for (let i = 0; i < contents.length; i++) {
-      const element = contents[i];
-      let whitespaces = this.slurp(element)
-      let spacer = element.slice(0, whitespaces)
-      if (element.startsWith(`${spacer}${this.reinsert_start}`)) {
-        found = true
-        continue
-      }
-      if (element.startsWith(`${spacer}${this.reinsert_end}`)) {
-        found = false
-        continue
-      }
-      if (found == true) {
-        this.edit = true
-        contents[i] = `// ${element}`
-        continue
-      }
-    }
-    contents = contents.join('\n')
-    return contents
+    this.was_edited = false
+    // this.inline_insert_regex = /(?<=\/\*\+\*\/)(.*?)(?=\/\*\.\*\/)/g
+    // this.inline_remove_regex = /(?<=\/\*\-\*\/)(.*?)(?=\/\*\.\*\/)/g
+    // this.inline_insert_string = `/*+*/`
+    // this.inline_remove_string = `/*-*/`
+    // this.inline_ending_string = `/*.*/`
+    // this.line_insert = `// /*++*/`
+    // this.line_remove = `/*--*/`
+    this.multiline_insert = `/*+++*/`
+    this.multiline_remove = `/*---*/`
+    this.multiline_ending = `/*...*/`
   }
   /**
-   * Slurp - returns the number of whitespace characters at the start of the string
-   * @param {string} line a string to be analyzed
+   * Evokes the file and saves it
    */
-  slurp(line) {
-    let whitespaces = line.split(/[^ \t\r\n]/)[0].length
-    return whitespaces
+  evoke() {
+    this.contents = fs.readFileSync(this.source).toString()
+    let data = this.process(this.contents)
+    // console.log(`Finished evoking file "${this.get_filename(this.source)}"!`)
+    return this.save(data)
   }
   save(data) {
     if (!fs.existsSync(this.target)) {
-      // always copy if the file doesn't exist
       fs.outputFileSync(this.target, data)
       edited++
-      return
+      return true
     } else {
-      if (this.edit) {
-        // only copy edited files if they will actually be different
-        if (fs.readFileSync(this.target).toString() == data) return
+      if (this.was_edited) {
+        if (fs.readFileSync(this.target).toString() == data) return true
         fs.outputFileSync(this.target, data)
         edited++
-        return
+        return true
       } else {
-        // only copy newer files if no edits were made
-        if (fs.lstatSync(this.target).mtimeMs < fs.lstatSync(this.source).mtimeMs) {
-          fs.outputFileSync(this.target, data)
-          edited++
-          return
-        }
+        return false
       }
     }
+  }
+  process(contents) {
+    let file = []
+    file = contents.split('\n') // split at every newline
+    var inserting = false
+    var removing = false
+    for (let i = 0; i < file.length; i++) {
+      const line = file[i];
+      let spaces = this.leading(line)
+      let sentence = line.slice(spaces.length, line.length)
+      // end multiline
+      if (sentence.startsWith(this.multiline_ending)) {
+        inserting = false
+        removing = false
+      }
+      // handle multiline
+      if (inserting) {
+        this.was_edited = true
+        sentence = sentence.replace('// ', '')
+      }
+      if (removing) {
+        this.was_edited = true
+        sentence = `// ${sentence}`
+      }
+      // establish multiline state
+      if (sentence.startsWith(this.multiline_insert)) {
+        inserting = true
+      }
+      if (sentence.startsWith(this.multiline_remove)) {
+        removing = true
+      }
+      // // handle single lines
+      // if (sentence.startsWith(this.line_insert)) {
+      //   this.was_edited = true
+      //   sentence = sentence.replace('// ', '')
+      // }
+      // if (sentence.startsWith(this.line_remove)) {
+      //   this.was_edited = true
+      //   sentence = `// ${sentence}`
+      // }
+      // // inline insertion
+      // if (this.inline_insert_regex.test(sentence)) {
+      //   var temp = sentence.split(this.inline_insert_regex)
+      //   for (let x = 0; x < temp.length; x++) {
+      //     const part = temp[x];
+      //     if (part.endsWith(this.inline_insert_string)) {
+      //       this.was_edited = true
+      //       temp[x + 1] = temp[x + 1].replace(' /*', '')
+      //       continue
+      //     }
+      //   }
+      //   sentence = temp.join('')
+      // }
+      // // inline removal
+      // if (this.inline_remove_regex.test(sentence)) {
+      //   var temp = sentence.split(this.inline_remove_regex)
+      //   for (let x = 0; x < temp.length; x++) {
+      //     const part = temp[x];
+      //     if (part.endsWith(this.inline_remove_string)) {
+      //       this.was_edited = true
+      //       temp[x + 1] = ` /*${temp[x + 1]}`
+      //       continue
+      //     }
+      //   }
+      //   sentence = temp.join('')
+      // }
+      // reconstruct the line and replace it in the file
+      file[i] = `${spaces}${sentence}`
+    }
+    file = file.join('\n') // join file with newlines
+    return file
+  }
+  /**
+   * Leading - get the leading whitespace characters from a string
+   * @param {String} line Any string or line of code
+   */
+  leading(line) {
+    return line.split(/[^ \s]/)[0]
+  }
+  /**
+   * Get Filename - get the filename from a given full file path
+   * @param {String} source Full path to file
+   */
+  get_filename(source) {
+    return source.split('\\').pop()
   }
 }
 
 program.name('evoke')
 program.version('0.0.1')
-
-program
-  .command('on <target>')
-  .description('turn special comments in target directory on')
-  .action((target) => on(target))
-
-program
-  .command('off <target>')
-  .description('turn special comments in target directory off')
-  .action((target) => off(target))
-
-program
-  .command('toggle <target>')
-  .description('toggle special comments in target directory')
-  .action((target) => toggle(target))
 
 program
   .command('build <source> <target>')
@@ -235,91 +212,115 @@ program
 program.parse(process.argv)
 
 /**
- * On - turns special comment sections "on" in target directory
- * @param {String} target directory path
- */
-function on(target) {
-  // console.log(`called on: ${target}`)
-  const files = get_files(target)
-  transpile({
-    mode: 'on',
-    target: target,
-    files: files
-  })
-}
-
-/**
- * Off - turns special comment sections "off" in target directory
- * @param {String} target directory path
- */
-function off(target) {
-  // console.log(`called off: ${target}`)
-  const files = get_files(target)
-  transpile({
-    mode: 'off',
-    target: target,
-    files: files
-  })
-}
-
-/**
- * Toggle - toggles special comment sections in target directory
- * @param {String} target target directory
- */
-function toggle(target) {
-  // console.log(`called toggle: ${target}`)
-  let state = project.toggle
-  if (state == 'on') {
-    off(target)
-    project.toggle = 'off'
-  } else if (state == 'off') {
-    on(target)
-    project.toggle = 'on'
-  }
-  var result = beautify(JSON.stringify(project), {
-    indent_size: 2
-  })
-  let dirname = __dirname
-  dirname = dirname.split('\\')
-  dirname.pop()
-  dirname = dirname.join('\\')
-  fs.writeFileSync(`${dirname}\\package.json`, result)
-  console.log(`Successfully toggled package ${project.toggle}`)
-}
-
-/**
- * Build - toggles the source folder comments and copies any new files to the target build folder
- * @param {String} source source folder path
- * @param {String} target target folder path
+ * Build - evokes the source folder js files and copies any new files to target build folder
+ * @param {string} source relative source folder path
+ * @param {string} target relative target folder path
  */
 function build(source, target) {
-  remap()
   console.log(`Called build: ${source} => ${target}`)
-  const files = get_files(source)
-  transpile({
-    mode: 'build',
-    source: source,
-    target: target,
-    files: files
+
+  const source_directory = path.resolve(source)
+  const target_directory = path.resolve(target)
+
+  fs.ensureDirSync(target_directory) // ensure root build folder path
+
+  const nodes = get_nodes(source_directory)
+
+  nodes.forEach((node) => {
+    let destination = node.path.replace(source_directory, target_directory)
+    if (node.isFile()) {
+      if (node.name.endsWith('.js')) {
+        let js = new Scriptoid(node.path, destination)
+        // evoke will handle saving the file if it was edited and is different than the target
+        if (!js.evoke()) {
+          copy_if_newer_or_nonexistant(node.path, destination)
+        }
+      } else {
+        copy_if_newer_or_nonexistant(node.path, destination)
+      }
+    } else if (node.isFolder()) {
+      fs.ensureDirSync(destination)
+    }
   })
+  console.log(`Edited ${edited} javascript files`)
+  console.log(`Copied ${copied} other files`)
+  cleanup(source_directory, target_directory)
+  end()
 }
 
 /**
- * Get Files - walks through the given directory and returns all dirents
- * @param {String} target target directory
+ * Cleanup - removes any files or folders in the target folder structure that don't match the source
+ * @param {String} source full source folder path
+ * @param {String} target full target folder path
  */
-function get_files(target) {
-  const files = walk(target, {
-    nodir: true
+function cleanup(source, target) {
+  var deleted = 0
+  const nodes = get_nodes(target)
+  let project_source = path.resolve('.')
+  nodes.forEach((node) => {
+    let unlink = node.path
+    let test = unlink.replace(target, source)
+    if (!fs.existsSync(test)) {
+      if (node.isFile()) {
+        console.log(`...deleting file ${unlink.replace(project_source, '')}`)
+        fs.unlinkSync(unlink)
+        deleted++
+      }
+      if (node.isDirectory()) {
+        console.log(`...deleting folder ${unlink.replace(project_source, '')}`)
+        fs.removeSync(unlink)
+        deleted++
+      }
+    }
   })
-  console.log(`Analyzing ${files.length} files...`)
-  return files
+  console.log(`Deleted ${deleted} items`)
 }
 
 /**
- * Get Files List
+ * copies source file to target if it's newer or nonexistant
+ * @param {string} source full path to source file
+ * @param {string} target full path to target file
+ */
+function copy_if_newer_or_nonexistant(source, target) {
+  if (fs.existsSync(target)) {
+    let current = fs.statSync(source).mtimeMs
+    let replace = fs.statSync(target).mtimeMs
+    if (current != replace) {
+      fs.copyFileSync(source, target)
+      copied++
+    }
+  } else {
+    fs.copyFileSync(source, target)
+    copied++
+  }
+}
+
+/**
+ * Get Nodes - recursively gets all files and folders in given directory and all subdirectories
+ * @param {string} dir full path of directory to scan
+ * @returns {[Node]} Array of node objects
+ */
+function get_nodes(dir) {
+  var nodes = []
+  let dirents = fs.readdirSync(dir, {
+    withFileTypes: true
+  })
+  dirents.forEach((dirent) => {
+    if (dirent.isDirectory()) {
+      // handle folder
+      nodes.push(new Node(dirent.name, `${dir}\\${dirent.name}`, 'folder'))
+      nodes = nodes.concat(get_nodes(`${dir}\\${dirent.name}`))
+    } else if (dirent.isFile()) {
+      // handle file
+      nodes.push(new Node(dirent.name, `${dir}\\${dirent.name}`, 'file'))
+    }
+  })
+  return nodes
+}
+
+/**
+ * Get Files List - gets list of files in folder without extensions
  * @param {String} target target folder to scan
- * - gets list of files in folder without extensions
  */
 function get_files_list(target) {
   let files = fs.readdirSync(target, {
@@ -334,102 +335,6 @@ function get_files_list(target) {
     return file
   })
   return files
-}
-
-/**
- * Transpile - transpiles and comments/uncomments a file structure based on the given mode
- * @param {Object} options an object with keys "mode", "target", "source", "files" depending on mode
- */
-function transpile(options) {
-  // create target directory if in build mode
-  if (options.mode == 'build') {
-    var target_directory = path.resolve(options.target)
-    var source_directory = path.resolve(options.source)
-    fs.ensureDirSync(target_directory)
-  }
-
-  for (let i = 0; i < options.files.length; i++) {
-    const element = options.files[i];
-    if (element.path.endsWith('.js')) {
-      let source = element.path
-      let filename = ''
-      filename = source.split('\\')
-      filename = filename[filename.length - 1]
-      let javascript = new Scriptoid(filename, source)
-      if (options.mode == 'build') {
-        let destination = `${source}`
-        destination = destination.replace(source_directory, target_directory)
-        javascript.target = destination
-      } else {
-        javascript.target = source
-      }
-      javascript.process(options.mode)
-    } else if (options.mode == 'build') {
-      // copy file directly...
-      let source = element.path
-      let destination = `${source}`
-      destination = destination.replace(source_directory, target_directory)
-      let source_folder = `${source}`
-      source_folder = source_folder.split(`\\`)
-      source_folder.pop()
-      source_folder = source_folder.join(`\\`)
-      let destination_folder = `${source_folder}`
-      destination_folder = destination_folder.replace(source_directory, target_directory)
-      // console.log(`ensuring ${destination_folder}`)
-      // console.log(`copying ${source} => ${destination}`)
-      fs.ensureDirSync(destination_folder)
-      // only copy newer files
-      if (fs.existsSync(destination)) {
-        let current = fs.statSync(source).mtimeMs
-        let replace = fs.statSync(destination).mtimeMs
-        if (current != replace) {
-          fs.copyFileSync(source, destination)
-          copied++
-        }
-      } else {
-        fs.copyFileSync(source, destination)
-        copied++
-      }
-      // end loop
-    }
-  }
-  console.log(`Edited ${edited} javascript files`)
-  console.log(`Copied ${copied} other files`)
-  if (options.mode == 'build') cleanup(source_directory, target_directory)
-  end()
-}
-
-/**
- * Cleanup - removes any files or folders in the target folder structure that don't match the source
- * @param {String} source source folder path
- * @param {String} target target folder path
- */
-function cleanup(source, target) {
-  let structure = walk(target)
-  let project_source = path.resolve('.')
-  for (let i = 0; i < structure.length; i++) {
-    let unlink = structure[i].path;
-    let test = unlink.replace(target, source)
-    if (!fs.existsSync(test) && fs.existsSync(unlink)) {
-      let stats = false
-      try {
-        stats = fs.lstatSync(unlink)
-      } catch {
-        console.log(`error getting stats for ${unlink.replace(project_source, '')}`)
-      }
-      if (stats == false) continue
-      if (stats.isFile()) {
-        console.log(`...deleting file ${unlink.replace(project_source, '')}...`)
-        fs.unlinkSync(unlink)
-      }
-      if (stats.isDirectory()) {
-        console.log(`...deleting folder ${unlink.replace(project_source, '')}...`)
-        fs.removeSync(unlink)
-      }
-      deleted++
-    }
-  }
-  console.log(`Deleted ${deleted} items`)
 }
 
 /**

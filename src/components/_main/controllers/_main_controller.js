@@ -1,4 +1,4 @@
-// ! REMOVE ! //
+/*---*/
 console.log(`Remove this at build!`)
 const {
   shell: shell,
@@ -14,17 +14,17 @@ const {
   env: env,
   server: server,
 } = require('../../../index')
-// ! END-REMOVE ! //
+/*...*/
 
 module.exports = function ($scope, $rootScope) {
-  // ! INSERT ! //
+  /*+++*/
   // var vm = $scope // set vm equal to $scope when in production
   // var root = $rootScope // set root equal to $rootScope in production
-  // ! END-INSERT ! //
-  // ! REMOVE ! //
+  /*...*/
+  /*---*/
   var vm = {} // initialize scope object as a basic object in development
   var root = {} // initialize root scope object as a basic object in development
-  // ! END-REMOVE ! //
+  /*...*/
 
   root.location = get_location()
   root.get_location = get_location
@@ -114,8 +114,8 @@ module.exports = function ($scope, $rootScope) {
     remote.getCurrentWindow().close()
   }
 
-  // ! REMOVE ! //
+  /*---*/
   module.exports = root // rewrite the module exports to be the root scope object
-  // ! END-REMOVE ! //
+  /*...*/
 
 }

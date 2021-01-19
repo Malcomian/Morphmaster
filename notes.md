@@ -29,3 +29,5 @@ Developer notes on Morphmaster - completed features, todo roadmap, etc.
 ❓ Keybinds??? Would be nice to have a page for all the custom keybind data, including globals, but that's probably for another type of project. Maybe for this one, the app will just load a basic set of keybinds that redo the way `ctrl+equals` and `ctrl+minus` work. Like, maybe this is all in a general "settings" page and that page would also include info on the main config.json file... probably just a "version 2.0" feature.
 
 ❓ I still have no idea why the elapsed time in the evoke script is sometimes negative.
+
+❓❓❓ The language features of javascript force a newline character after all `/* ... */` patterns. Single line and certain inline features are buggy and don't play well with auto formatting in many circumstances!
