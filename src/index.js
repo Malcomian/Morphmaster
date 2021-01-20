@@ -45,5 +45,6 @@ module.exports = {
   Bootstrap: Bootstrap,
   env: env,
   server: server,
+  finder
 }
 /*...*/
