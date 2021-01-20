@@ -67,6 +67,9 @@ module.exports = function ($scope, $rootScope) {
   vm.maximize = maximize
   vm.close = close
 
+  root.md = require('../../../models/md')
+  root.message = 'hello!'
+
   function back() {
     window.history.back()
   }

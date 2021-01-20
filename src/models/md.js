@@ -1,6 +1,6 @@
-var md = {}
-md.get = get
-md.render = render
+var md = (url) => {
+  return render(get(url))
+}
 
 /**
  * returns the contents of a markdown file
@@ -35,6 +35,9 @@ function render(contents) {
       }
       return `<pre class="hljs"><code>${markdown.utils.escapeHtml(str)}</code></pre>`
     }
+  })
+  markdown.use(require('markdown-it-attrs'), {
+    allowedAttributes: []
   })
   return markdown.render(contents)
 }
