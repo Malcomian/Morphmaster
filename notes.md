@@ -31,3 +31,5 @@ Developer notes on Morphmaster - completed features, todo roadmap, etc.
 ❓ I still have no idea why the elapsed time in the evoke script is sometimes negative.
 
 ❓❓❓ The language features of javascript force a newline character after all `/* ... */` patterns. Single line and certain inline features are buggy and don't play well with auto formatting in many circumstances!
+
+❓ Refactor gen command to have an optional URL, in which case no controller or route will be assigned to it.
