@@ -193,10 +193,6 @@ The File class is used for easily loading, saving, and "yoinking" the contents o
 **yoink(path, filename)** "yoinks" the file by copying all the target file's properties and values onto this object.
 **ensure(path, filename)** ensures the file exists at the target path.
 
-### env.js
-
-This model helps to load some special "environment" settings for the app. When the app launches, this model will scan the APPDATA folder and if a subfolder with the right project name doesn't exist, it will be created.
-
 ### config.js
 
 This model helps create config.json files in the APPDATA subfolder that matches the name of your current project. It stores some basic application configuration info, like the last known x/y position, width/height, min with/min height, zoom level, and whether the app is maximized. There are a few ipcRenderer/ipcMain connections that coordinate the saving and loading of this configuration file. The app should remember the last state that it was in when it was closed and when it is loaded again, it will launch in exactly the same place with exactly the same size and location parameters. The object that contains this model is passed to the renderer and is attached to the global object in main.js.
