@@ -38,7 +38,6 @@ module.exports = {
   $: $,
   Popper: Popper,
   Bootstrap: Bootstrap,
-  env: env,
   server: server,
   finder
 }
