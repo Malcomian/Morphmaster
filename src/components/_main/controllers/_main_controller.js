@@ -11,7 +11,6 @@ const {
   $: $,
   Popper: Popper,
   Bootstrap: Bootstrap,
-  env: env,
   server: server,
 } = require('../../../index')
 /*...*/

@@ -14,20 +14,16 @@ const path = require('path')
 
 app.allowRendererProcessReuse = true
 
-const Environment = require('./src/models/env')
-
 const app_name = require('./package.json').name
-
-const env = new Environment(app_name)
-global.env = env
-global.env.load()
 
 const win_offset = 50 // the number of pixels to offset a new window by
 const Config = require('./src/models/config')
 
 var config = new Config()
 
-config.load(global.env.path, 'config')
+const AppData = app.getPath('userData')
+
+config.load(AppData, 'config')
 
 // Commands can be sent from the renderer to the main process
 // errors and output are sent back in a reply
@@ -152,7 +148,7 @@ app.on('ready', function () {
 });
 
 app.on('will-quit', () => {
-  config.save(`${global.env.path}`)
+  config.save(`${AppData}`)
 })
 
 // quit when all windows are closed

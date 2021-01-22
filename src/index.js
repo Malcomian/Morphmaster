@@ -21,11 +21,6 @@ $('*').on('dragstart', (event) => {
   event.preventDefault();
 })
 
-// ? set up environment
-const Env = require('./models/env')
-var env = new Env(remote.getGlobal('app_name'))
-env.reload(remote.getGlobal('env'))
-
 // ? start the angular app
 const Server = require('./models/server');
 var server = new Server();
