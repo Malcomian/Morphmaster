@@ -21,9 +21,9 @@ const Config = require('./src/models/config')
 
 var config = new Config()
 
-const AppData = app.getPath('userData')
+const userData = app.getPath('userData')
 
-config.load(AppData, 'config')
+config.load(userData, 'config')
 
 // Commands can be sent from the renderer to the main process
 // errors and output are sent back in a reply
@@ -148,7 +148,7 @@ app.on('ready', function () {
 });
 
 app.on('will-quit', () => {
-  config.save(`${AppData}`)
+  config.save(`${userData}`)
 })
 
 // quit when all windows are closed
