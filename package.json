@@ -72,7 +72,8 @@
       "createDesktopShortcut": false,
       "installerIcon": "./resources/icon.ico",
       "installerSidebar": "./resources/installerSidebar.bmp",
-      "artifactName": "${productName} Setup ${version}.${ext}"
+      "artifactName": "${productName} Setup ${version}.${ext}",
+      "deleteAppDataOnUninstall": true
     },
     "directories": {
       "buildResources": "./resources"
