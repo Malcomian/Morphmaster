@@ -9,8 +9,6 @@ console.log(`Building project, "${project.name}"...`)
 const Command = require('commander').Command
 const program = new Command()
 
-const beautify = require('js-beautify').js
-
 const appname = 'main' // the angular app name
 const root = '_main' // the root component, which will be loaded first inside of prio_sort()
 const controller_postfix = '_controller' // the extension string for controller files, ex: "_main_controller" or "about_controller"
@@ -423,9 +421,7 @@ function remap() {
   console.log(`Remapping ${components.length} project components...`)
 
   // console.log(result)
-  fs.writeFileSync(`${path.resolve('./src/models')}\\.app.json`, beautify(JSON.stringify(result), {
-    indent_size: 2
-  }))
+  fs.writeFileSync(`${path.resolve('./src/models')}\\.app.json`, JSON.stringify(result, null, 2))
   end()
 }
 

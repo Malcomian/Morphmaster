@@ -62,11 +62,7 @@ dirname.pop()
 dirname = dirname.join('\\')
 var target = path.join(dirname, `package.json`)
 
-const beautify = require('js-beautify').js
-
-var result = beautify(JSON.stringify(package), {
-  indent_size: 2
-})
+var result = JSON.stringify(package, null, 2)
 
 fs.writeFileSync(target, result)
 

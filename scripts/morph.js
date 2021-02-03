@@ -4,7 +4,6 @@
 const fs = require('fs-extra')
 
 var package = require('../package.json')
-const beautify = require('js-beautify').js
 
 console.log(`Morphing package "${package.name}" @ "${__dirname}"...`)
 
@@ -40,9 +39,7 @@ rl.question('New productName (defaults to package name): ', (answer) => {
 })
 
 function save() {
-  var result = beautify(JSON.stringify(package), {
-    indent_size: 2
-  })
+  var result = JSON.stringify(package, null, 2)
   fs.writeFileSync(`${dirname}\\package.json`, result)
   console.log(`Successfully updated package`)
 }

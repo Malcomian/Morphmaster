@@ -276,7 +276,6 @@ The following is a list of packages used in this project.
 * **[fs-extra](https://www.npmjs.com/package/fs-extra):** A drop-in replacement for the node's native fs module. Required for most of the models used in this project.
 * **[highlight.js](https://www.npmjs.com/package/highlight.js):** A library for adding syntax highlighting to rendered markdown files.
 * **[jquery](https://jquery.com/):** I'd be equally surprised and impressed if you haven't heard of it. Required for AngularJS apps.
-* **[js-beautify](https://beautifier.io/):** A library to beautify javascripts. Required for `evoke.js`.
 * **[markdown-it](https://www.npmjs.com/package/markdown-it):** A library for rendering markdown files as HTML.
 * **[markdown-it-attrs](https://www.npmjs.com/package/markdown-it-attrs):** A plugin for markdown-it that alters element attributes.
 * **[mousetrap](https://www.npmjs.com/package/mousetrap):** A library for rebinding hotkeys. Includes options for "global" keybinds that work even when the user is focused inside of text inputs.
