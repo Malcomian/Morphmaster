@@ -12,6 +12,7 @@ const {
   Popper: Popper,
   Bootstrap: Bootstrap,
   server: server,
+  _: _
 } = require('../../../index')
 /*...*/
 
@@ -107,16 +108,15 @@ module.exports = function ($scope, $rootScope) {
   function navigate() {
     console.log(`navigating to ${root.location}`)
     let href = $('#form-location input').val()
+    href = encodeURI(href)
     href = `#!/${href}`
-    href = href.replaceAll(' ', '%20') // escape spaces to %20
     window.location.href = href
   }
 
   function get_location() {
     let hash = window.location.hash
     hash = hash.replace('#!/', '')
-    hash = hash.replaceAll('%20', ' ') // escape %20 to spaces
-    return hash
+    return decodeURI(hash)
   }
 
   function minimize() {

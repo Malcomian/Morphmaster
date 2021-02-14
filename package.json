@@ -33,6 +33,7 @@
     "highlight.js": "^10.5.0",
     "jquery": "^3.5.1",
     "js-beautify": "^1.13.0",
+    "lodash": "^4.17.20",
     "markdown-it": "^12.0.4",
     "markdown-it-attrs": "^4.0.0",
     "mousetrap": "^1.6.5",

@@ -15,6 +15,7 @@ const fs = require('fs-extra');
 const $ = require('jquery');
 const Popper = require('popper.js');
 const Bootstrap = require('bootstrap');
+const _ = require('lodash')
 
 // ? prevent default drag behavior so that links aren't weird
 $('*').on('dragstart', (event) => {
@@ -39,6 +40,7 @@ module.exports = {
   Popper: Popper,
   Bootstrap: Bootstrap,
   server: server,
-  finder
+  finder,
+  _
 }
 /*...*/
