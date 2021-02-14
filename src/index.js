@@ -1,15 +1,4 @@
-/*---*/
-console.log(`Remove this at build!`)
-/*...*/
-
-const {
-  shell,
-  clipboard,
-  webFrame,
-  remote,
-  nativeImage,
-  ipcRenderer
-} = require('electron');
+const electron = require('electron');
 
 const fs = require('fs-extra');
 const $ = require('jquery');
@@ -29,17 +18,18 @@ var server = new Server();
 /*---*/
 console.log(`Remove this at build!`)
 module.exports = {
-  shell: shell,
-  clipboard: clipboard,
-  webFrame: webFrame,
-  remote: remote,
-  nativeImage: nativeImage,
-  ipcRenderer: ipcRenderer,
-  fs: fs,
-  $: $,
-  Popper: Popper,
-  Bootstrap: Bootstrap,
-  server: server,
+  electron,
+  shell,
+  clipboard,
+  webFrame,
+  remote,
+  nativeImage,
+  ipcRenderer,
+  fs,
+  $,
+  Popper,
+  Bootstrap,
+  server,
   finder,
   _
 }

@@ -9,8 +9,6 @@ module.exports = function ($scope, $rootScope) {
   /*...*/
 
   vm.get_url = () => {
-    let hash = window.location.hash
-    hash = hash.split('%20').join(' ')
-    return hash
+    return decodeURI(window.location.hash)
   }
 }

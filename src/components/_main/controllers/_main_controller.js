@@ -1,18 +1,13 @@
 /*---*/
 console.log(`Remove this at build!`)
 const {
-  shell: shell,
-  clipboard: clipboard,
-  webFrame: webFrame,
-  remote: remote,
-  nativeImage: nativeImage,
-  ipcRenderer: ipcRenderer,
-  fs: fs,
-  $: $,
-  Popper: Popper,
-  Bootstrap: Bootstrap,
-  server: server,
-  _: _
+  electron,
+  fs,
+  $,
+  Popper,
+  Bootstrap,
+  server,
+  _,
 } = require('../../../index')
 /*...*/
 
@@ -30,7 +25,7 @@ module.exports = function ($scope, $rootScope) {
   root.get_location = get_location
   root.navigate = navigate
 
-  ipcRenderer.on(`redirect-${remote.getCurrentWebContents().id}`, (event, data) => {
+  electron.ipcRenderer.on(`redirect-${electron.remote.getCurrentWebContents().id}`, (event, data) => {
     // console.log('got redirect data')
     // ? redirect to the given url, but use the replace method to replace the first history state
     window.location.replace(data)
@@ -51,12 +46,12 @@ module.exports = function ($scope, $rootScope) {
   })
 
   // example of sending and receiving custom commands and outputs to/from the main process
-  ipcRenderer.on('run-output', (event, data) => {
+  electron.ipcRenderer.on('run-output', (event, data) => {
     if (data.error) console.error(data.error)
     if (data.stdout) console.log(data.stdout)
     if (data.stderr) console.log(data.stderr)
   })
-  ipcRenderer.send('command', 'echo Hello, world!')
+  electron.ipcRenderer.send('command', 'echo Hello, world!')
 
   vm.back = back
   vm.forward = forward
@@ -98,7 +93,7 @@ module.exports = function ($scope, $rootScope) {
   }
 
   function refresh() {
-    remote.getCurrentWebContents().reload()
+    electron.remote.getCurrentWebContents().reload()
   }
 
   function select_location() {
@@ -120,19 +115,19 @@ module.exports = function ($scope, $rootScope) {
   }
 
   function minimize() {
-    remote.getCurrentWindow().minimize()
+    electron.remote.getCurrentWindow().minimize()
   }
 
   function maximize() {
-    if (remote.getCurrentWindow().isMaximized()) {
-      remote.getCurrentWindow().unmaximize()
+    if (electron.remote.getCurrentWindow().isMaximized()) {
+      electron.remote.getCurrentWindow().unmaximize()
     } else {
-      remote.getCurrentWindow().maximize()
+      electron.remote.getCurrentWindow().maximize()
     }
   }
 
   function close() {
-    remote.getCurrentWindow().close()
+    electron.remote.getCurrentWindow().close()
   }
 
   /*---*/

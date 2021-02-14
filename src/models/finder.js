@@ -1,5 +1,5 @@
 /*---*/
-const remote = require('electron').remote
+const electron = require('electron')
 /*...*/
 
 // ! the input always counts as a match, but it's not like it matters much
@@ -21,14 +21,14 @@ var finder = {
     if (!this.searching) {
       this.clear()
       // console.log('first search...')
-      remote.getCurrentWebContents().findInPage(query, {
+      electron.remote.getCurrentWebContents().findInPage(query, {
         matchCase: this.match
       })
       this.searching = true
       this.last = query
     } else {
       // console.log('searching again...')
-      remote.getCurrentWebContents().findInPage(query, {
+      electron.remote.getCurrentWebContents().findInPage(query, {
         findNext: true,
         matchCase: this.match
       })
@@ -48,21 +48,21 @@ var finder = {
     }
     if (!this.searching) {
       this.clear()
-      remote.getCurrentWebContents().findInPage(query, {
+      electron.remote.getCurrentWebContents().findInPage(query, {
         forward: false,
         matchCase: this.match
       })
       this.searching = true
       this.last = query
     } else {
-      remote.getCurrentWebContents().findInPage(query, {
+      electron.remote.getCurrentWebContents().findInPage(query, {
         forward: false,
         findNext: true,
         matchCase: this.match
       })
     }
     // console.log(`Reverse searching for "${query}"...`)
-    // remote.getCurrentWebContents().findInPage(query, {
+    // electron.remote.getCurrentWebContents().findInPage(query, {
     //   forward: false,
     //   findNext: true
     // })
@@ -90,7 +90,7 @@ var finder = {
    * Clears selection and resets results
    */
   clear() {
-    remote.getCurrentWebContents().stopFindInPage('clearSelection')
+    electron.remote.getCurrentWebContents().stopFindInPage('clearSelection')
     this.result = {
       activeMatchOrdinal: 0,
       finalUpdate: true,
@@ -110,7 +110,7 @@ var finder = {
   init() {
     // register the found in page event one second after app launch
     setTimeout(() => {
-      remote.getCurrentWebContents().on('found-in-page', (event, result) => {
+      electron.remote.getCurrentWebContents().on('found-in-page', (event, result) => {
         this.result = result
         console.log(`active: ${this.result.activeMatchOrdinal}, matches: ${this.result.matches}`)
         // matches is one less because the input counts as one
