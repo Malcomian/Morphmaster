@@ -67,23 +67,6 @@ module.exports = function ($scope, $rootScope) {
   root.finder = require('../../../models/finder')
   root.finder.init()
 
-  root.keybinds = require('../../../models/keybinds')
-  $('#finder').on('focus', () => {
-    root.keybinds.bindGlobal('esc', () => {
-      root.finder.close()
-      root.keybinds.unbinds(['esc', 'enter', 'shift+enter'])
-    })
-    root.keybinds.bindGlobal('enter', (event) => {
-      root.finder.search()
-    })
-    root.keybinds.bindGlobal('shift+enter', (event) => {
-      root.finder.reverse()
-    })
-  })
-  root.keybinds.bindGlobal('ctrl+f', (event) => {
-    root.finder.open()
-  })
-
   function back() {
     window.history.back()
   }

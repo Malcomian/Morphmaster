@@ -116,8 +116,25 @@ var finder = {
         // matches is one less because the input counts as one
         document.getElementById('found').innerText = `${result.activeMatchOrdinal}/${result.matches - 1}`
       })
+      // register keybinds events
+      $('#finder').on('focus', () => {
+        finder.keybinds.bindGlobal('esc', () => {
+          finder.close()
+          finder.keybinds.unbinds(['esc', 'enter', 'shift+enter'])
+        })
+        finder.keybinds.bindGlobal('enter', (event) => {
+          finder.search()
+        })
+        finder.keybinds.bindGlobal('shift+enter', (event) => {
+          finder.reverse()
+        })
+      })
+      finder.keybinds.bindGlobal('ctrl+f', (event) => {
+        finder.open()
+      })
     }, 1000)
   },
+  keybinds: require('../models/keybinds'),
   result: {
     activeMatchOrdinal: 0,
     finalUpdate: true,
