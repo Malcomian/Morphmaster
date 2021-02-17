@@ -51,28 +51,56 @@ The evoke script is a command line interface utility that can transpile a source
 
 For inserting and removing multiple lines, start with `/*+++*/` for inserting code and `/*---*/` for removing code. End these sections with `/*...*/`. Everything between these lines will either be inserted (whereby double slash comments will be removed from the start of the line) or removed (whereby double slash comments will be added to the start of the line). Note that these lines only need to start with these patterns (ignoring any leading space or tab characters), which can be helpful for extra comments.
 
+For inserting and removing single lines, start with `// /*++*/` for inserting code and `/*--*/` for removing code. These sections don't require any ending pattern.
+
+For inserting and removing inline code, start with `/*+*/ /*` for inserting code and `/*-*/` for removing code. End these sections with `/*.*/`. These patterns can be inserted anywhere in a line of code.
+
+One issue with the single line and inline methods is that they will usually behave poorly with anything but the default vscode code formatter, as most code formatters will push code that appears after a block quote, which is anything starting with a `/*` and ending with a `*/`, to a new line.
+
 **Example:** look at the following example source code:
 
 ```javascript
+// multiline insertion
 /*+++*/
 // console.log('this will be inserted at build!')
 /*...*/
 
+// multiline removal
 /*---*/
 console.log('this will be removed at build!')
 /*...*/
+
+// single line insertion
+// /*++*/ console.log('this will be inserted at build!')
+
+// single line removal
+/*--*/ console.log('this will be removed at build!')
+
+// inline insertion and removal
+console.log(/*+*/ /* 'this will be inserted at build!' /*.*/ /*-*/ 'this will be removed at build!' /*.*/)
 ```
 
 When the project builds, the code will turn into the following:
 
 ```javascript
+// multiline insertion
 /*+++*/
 console.log('this will be inserted at build!')
 /*...*/
 
+// multiline removal
 /*---*/
 // console.log('this will be removed at build!')
 /*...*/
+
+// single line insertion
+/*++*/ console.log('this will be inserted at build!')
+
+// single line removal
+// /*--*/ console.log('this will be removed at build!')
+
+// inline insertion and removal
+console.log(/*+*/ 'this will be inserted at build!' /*.*/ /*-*/ /* 'this will be removed at build!' /*.*/)
 ```
 
 As a side note, I thought it'd be worthwhile to mention that - for convenience - these patterns are meant to be typed using only one hand on a number pad.
