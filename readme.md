@@ -23,7 +23,7 @@ npm run morph
 
 ### Zip
 
-The zip script is for archiving the current project. Everything within the root project folder will be put into a single zip file. The name of the file will be the project name followed by a timestamp and an optional note. The zip file is saved next to the root project folder. Requires 7zip.
+The zip script is for archiving the current project. Everything except the `node_modules`, `dist`, `build` and `.git` folders within the root project folder will be put into a single zip file. The name of the file will be the project name followed by a timestamp and an optional note, which the script will prompt the user for. The zip file is saved next to the root project folder. Requires 7zip.
 
 ```bash
 npm run zip
