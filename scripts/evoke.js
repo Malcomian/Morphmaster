@@ -61,13 +61,13 @@ class Scriptoid {
     this.target = target
     this.contents = ''
     this.was_edited = false
-    // this.inline_insert_regex = /(?<=\/\*\+\*\/)(.*?)(?=\/\*\.\*\/)/g
-    // this.inline_remove_regex = /(?<=\/\*\-\*\/)(.*?)(?=\/\*\.\*\/)/g
-    // this.inline_insert_string = `/*+*/`
-    // this.inline_remove_string = `/*-*/`
-    // this.inline_ending_string = `/*.*/`
-    // this.line_insert = `// /*++*/`
-    // this.line_remove = `/*--*/`
+    this.inline_insert_regex = /(?<=\/\*\+\*\/)(.*?)(?=\/\*\.\*\/)/g
+    this.inline_remove_regex = /(?<=\/\*\-\*\/)(.*?)(?=\/\*\.\*\/)/g
+    this.inline_insert_string = `/*+*/`
+    this.inline_remove_string = `/*-*/`
+    this.inline_ending_string = `/*.*/`
+    this.line_insert = `// /*++*/`
+    this.line_remove = `/*--*/`
     this.multiline_insert = `/*+++*/`
     this.multiline_remove = `/*---*/`
     this.multiline_ending = `/*...*/`
@@ -127,41 +127,41 @@ class Scriptoid {
       if (sentence.startsWith(this.multiline_remove)) {
         removing = true
       }
-      // // handle single lines
-      // if (sentence.startsWith(this.line_insert)) {
-      //   this.was_edited = true
-      //   sentence = sentence.replace('// ', '')
-      // }
-      // if (sentence.startsWith(this.line_remove)) {
-      //   this.was_edited = true
-      //   sentence = `// ${sentence}`
-      // }
-      // // inline insertion
-      // if (this.inline_insert_regex.test(sentence)) {
-      //   var temp = sentence.split(this.inline_insert_regex)
-      //   for (let x = 0; x < temp.length; x++) {
-      //     const part = temp[x];
-      //     if (part.endsWith(this.inline_insert_string)) {
-      //       this.was_edited = true
-      //       temp[x + 1] = temp[x + 1].replace(' /*', '')
-      //       continue
-      //     }
-      //   }
-      //   sentence = temp.join('')
-      // }
-      // // inline removal
-      // if (this.inline_remove_regex.test(sentence)) {
-      //   var temp = sentence.split(this.inline_remove_regex)
-      //   for (let x = 0; x < temp.length; x++) {
-      //     const part = temp[x];
-      //     if (part.endsWith(this.inline_remove_string)) {
-      //       this.was_edited = true
-      //       temp[x + 1] = ` /*${temp[x + 1]}`
-      //       continue
-      //     }
-      //   }
-      //   sentence = temp.join('')
-      // }
+      // handle single lines
+      if (sentence.startsWith(this.line_insert)) {
+        this.was_edited = true
+        sentence = sentence.replace('// ', '')
+      }
+      if (sentence.startsWith(this.line_remove)) {
+        this.was_edited = true
+        sentence = `// ${sentence}`
+      }
+      // inline insertion
+      if (this.inline_insert_regex.test(sentence)) {
+        var temp = sentence.split(this.inline_insert_regex)
+        for (let x = 0; x < temp.length; x++) {
+          const part = temp[x];
+          if (part.endsWith(this.inline_insert_string)) {
+            this.was_edited = true
+            temp[x + 1] = temp[x + 1].replace(' /*', '')
+            continue
+          }
+        }
+        sentence = temp.join('')
+      }
+      // inline removal
+      if (this.inline_remove_regex.test(sentence)) {
+        var temp = sentence.split(this.inline_remove_regex)
+        for (let x = 0; x < temp.length; x++) {
+          const part = temp[x];
+          if (part.endsWith(this.inline_remove_string)) {
+            this.was_edited = true
+            temp[x + 1] = ` /*${temp[x + 1]}`
+            continue
+          }
+        }
+        sentence = temp.join('')
+      }
       // reconstruct the line and replace it in the file
       file[i] = `${spaces}${sentence}`
     }
