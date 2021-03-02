@@ -8,12 +8,12 @@
     "start": "electron .",
     "dist": "electron-builder -w",
     "evoke": "node ./scripts/evoke.js",
-    "build": "node ./scripts/evoke.js build \"./src\" \"./build\"",
+    "build": "npm run evoke \"remap\" && npx abjure build \"./src\" \"./build\"",
     "gen": "node ./scripts/evoke.js gen",
     "add": "node ./scripts/evoke.js add",
     "remap": "node ./scripts/evoke.js remap",
-    "watch": "node ./scripts/watch.js \"./src\"",
-    "zip": "node ./scripts/zip.js",
+    "watch": "npx chokidar \"./src\" -c \"npm run build\"",
+    "zip": "npx zipadeedoodah -o \"../<cwd>_<timestamp>\" -g \"*/**\" \"*.*\" -d -l 9 -i \"node_modules/**\" \".git/**\" \".gitignore\" \"build/**\" \"dist/**\"",
     "morph": "node ./scripts/morph.js",
     "update-version": "node ./scripts/update_version.js"
   },
@@ -40,10 +40,11 @@
     "popper.js": "^1.16.1"
   },
   "devDependencies": {
-    "abjure": "^0.0.3",
+    "abjure": "^0.0.6",
     "chokidar-cli": "^2.1.0",
     "electron": "^11.1.1",
-    "electron-builder": "^22.9.1"
+    "electron-builder": "^22.9.1",
+    "zipadeedoodah": "^0.0.11"
   },
   "keywords": [
     "AngularJS",
