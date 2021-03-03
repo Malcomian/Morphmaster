@@ -12,7 +12,7 @@
     "gen": "node ./scripts/evoke.js gen",
     "add": "node ./scripts/evoke.js add",
     "remap": "node ./scripts/evoke.js remap",
-    "watch": "npx chokidar \"./src\" -c \"npm run build\"",
+    "watch": "npx chokidar \"./src\" -c \"npm run build\" -i \"**/.app.json\"",
     "zip": "npx zipadeedoodah -o \"../<cwd>_<timestamp>\" -g \"*/**\" \"*.*\" -d -l 9 -i \"node_modules/**\" \".git/**\" \".gitignore\" \"build/**\" \"dist/**\"",
     "morph": "node ./scripts/morph.js",
     "update-version": "node ./scripts/update_version.js"
