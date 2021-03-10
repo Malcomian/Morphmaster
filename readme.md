@@ -227,7 +227,6 @@ The following is a list of packages used in this project.
 * **[angular-vs-repeat](https://github.com/kamilkp/angular-vs-repeat):** A virtual repeater for displaying large data sets.
 * **[bootstrap](https://getbootstrap.com/):** The base CSS framework, imported into the main `style.scss` file. The Bootstrap javascript library is loaded manually in the main renderer index file.
 * **[brace](https://www.npmjs.com/package/brace):** A CommonJS Module style implementation of the Cloud 9 Ace editor.
-* **[commander](https://www.npmjs.com/package/commander):** A module for creating command line applications. Required for `evoke.js` commands.
 * **[fs-extra](https://www.npmjs.com/package/fs-extra):** A drop-in replacement for the node's native fs module. Required for most of the models used in this project.
 * **[highlight.js](https://www.npmjs.com/package/highlight.js):** A library for adding syntax highlighting to rendered markdown files.
 * **[jquery](https://jquery.com/):** I'd be equally surprised and impressed if you haven't heard of it. Required for AngularJS apps.
@@ -240,6 +239,7 @@ The following is a list of packages used in this project.
 
 * **[abjure](https://www.npmjs.com/package/abjure):** A command line interface utility that enables a special sort of intellisense by transpiling javascript files that contain certain patterns that "comment in" or "comment out" sections of code.
 * **[chokidar-cli](https://www.npmjs.com/package/chokidar-cli):** Watches the `./src` directory for changes to automatically run the build script.
+* **[commander](https://www.npmjs.com/package/commander):** A module for creating command line applications. Required for `evoke.js` commands.
 * **[electron](https://www.electronjs.org/):** This is an electron app, after all.
 * **[electron-builder](https://www.electron.build/):** The flavor of electron builder I chose. The build options are specified within `package.json`. Currently set to build a simple NSIS-based installer executable for windows.
 * **[zipadeedoodah](https://www.npmjs.com/package/zipadeedoodah):** A simple CLI zip utility based on glob patterns with minimal setup.
