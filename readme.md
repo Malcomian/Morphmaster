@@ -10,7 +10,7 @@ The main feature of this framework is the inclusion of a few command-line utilit
 
 Here's the typical setup process: first, create a new folder with the name of the project that you want. Then, unzip the contents of this project to that folder and run `npm install` to download all the node modules used in this project. Then, run `npm run morph` to change some of the basic project information in `package.json`. Then you can start generating components based on the application structure that you need or carry on as normal in your development process.
 
-The current project structure is set up in "build mode". You can either run `watch.js` with `npm run watch` or you can manually build the project after creating or editing files and directories inside of the `src` folder with `npm run build`. You can then start the app in another termainl with `npm start`, which runs `electron .`. See below for more details on the different scripts and setups available.
+The current project structure makes liberal usage of a unique transpiling script, [abjure](https://www.npmjs.com/package/abjure). Abjure gives the developer a special sort of on-demand intellisense inside of javascript files that helps reveal the contents of other javascript files without affecting the final build. Run `npm run watch` to run [chokidar-cli](https://www.npmjs.com/package/chokidar-cli) on the `src` folder - whenever a file is created, updated, or destroyed in the `src` folder, the build script will be invoked and the project will rebuild. See the [project page](https://www.npmjs.com/package/abjure) for abjure for more details on how it works.
 
 ### Morph
 
@@ -23,7 +23,7 @@ npm run morph
 
 ### Zip
 
-The zip script is for archiving the current project. Everything except the `node_modules`, `dist`, `build` and `.git` folders within the root project folder will be put into a single zip file. The name of the file will be the project name followed by a timestamp and an optional note, which the script will prompt the user for. The zip file is saved next to the root project folder. Requires 7zip.
+The zip script is for archiving the current project using a simple zip cli utility, [zipadeedoodah](https://www.npmjs.com/package/zipadeedoodah). Everything except the `node_modules`, `dist`, `build` and `.git` folders within the root project folder will be put into a single zip file. The name of the resulting zip file will be the project name followed by a timestamp and an optional note, which the script will prompt the user for. The zip file is saved next to the root project folder. This is useful for making snapshots of the project without pushing anything to github.
 
 ```bash
 npm run zip
@@ -47,89 +47,7 @@ npm run update-version set 0.0.1
 
 ### Evoke
 
-The evoke script is a command line interface utility that can transpile a source directory into a build directory but with some special features in regards to javascript files. It will look for special comment lines and either "comment in" or "comment out" those sections based on some simple patterns. The main idea is that this feature allows for special imports between javascript files that wouldn't normally be able to import or export their code. This allows the developer a type of on-demand special intellisense.
-
-For inserting and removing multiple lines, start with `/*+++*/` for inserting code and `/*---*/` for removing code. End these sections with `/*...*/`. Everything between these lines will either be inserted (whereby double slash comments will be removed from the start of the line) or removed (whereby double slash comments will be added to the start of the line). Note that these lines only need to start with these patterns (ignoring any leading space or tab characters), which can be helpful for extra comments.
-
-For inserting and removing single lines, start with `// /*++*/` for inserting code and `/*--*/` for removing code. These sections don't require any ending pattern.
-
-For inserting and removing inline code, start with `/*+*/ /*` for inserting code and `/*-*/` for removing code. End these sections with `/*.*/`. These patterns can be inserted anywhere in a line of code.
-
-One issue with the single line and inline methods is that they will usually behave poorly with anything but the default vscode code formatter, as most code formatters will push code that appears after a block quote, which is anything starting with a `/*` and ending with a `*/`, to a new line.
-
-**Example:** look at the following example source code:
-
-```javascript
-// multiline insertion
-/*+++*/
-// console.log('this will be inserted at build!')
-/*...*/
-
-// multiline removal
-/*---*/
-console.log('this will be removed at build!')
-/*...*/
-
-// single line insertion
-// /*++*/ console.log('this will be inserted at build!')
-
-// single line removal
-/*--*/ console.log('this will be removed at build!')
-
-// inline insertion and removal
-console.log(/*+*/ /* 'this will be inserted at build!' /*.*/ /*-*/ 'this will be removed at build!' /*.*/)
-```
-
-When the project builds, the code will turn into the following:
-
-```javascript
-// multiline insertion
-/*+++*/
-console.log('this will be inserted at build!')
-/*...*/
-
-// multiline removal
-/*---*/
-// console.log('this will be removed at build!')
-/*...*/
-
-// single line insertion
-/*++*/ console.log('this will be inserted at build!')
-
-// single line removal
-// /*--*/ console.log('this will be removed at build!')
-
-// inline insertion and removal
-console.log(/*+*/ 'this will be inserted at build!' /*.*/ /*-*/ /* 'this will be removed at build!' /*.*/)
-```
-
-As a side note, I thought it'd be worthwhile to mention that - for convenience - these patterns are meant to be typed using only one hand on a number pad.
-
-#### Build
-
-To build and run the project, run the `build` project script, which is currently set to `node ./scripts/evoke.js "./src" "./build"`.
-
-```bash
-npm run build
-# or
-npm run evoke build "./src" "./build"
-```
-
-The build command will scan the given source directory for javascript files that contain any special comment sections. It will then comment out those sections and output the exact same folder and file structure to the target directory (but will also only copy files that are newer in the source folder than the target build folder).
-
-It may behoove the developer to manually exclude their target build folder from their IDE's file explorer and search menus. Otherwise you'll see the duplicate folder structure, and that's not something that needs to be edited.
-
-Example: `.vscode/settings.json`
-
-```json
-{
-  "files.exclude": {
-    "**/build": true
-  }
-}
-```
-
-Note that after the build script is run, a cleanup function will remove any files or folders within the build directory that do not match the source.
+The evoke script is a command line interface utility that handles the generation of angular components within the project. It has three main commands - `gen`, `add`, and `remap`.
 
 #### Gen
 
@@ -167,11 +85,11 @@ component_name/
       example_template.html
 ```
 
-In evoke.js, the base appname (angular app name), root (root component name - usually must be loaded first), controller_postfix (extension string for controller files), and route_postfix (extension string for router files) variables can be edited to suit your own coding style. I like to use underscores instead of camelcase.
+In evoke.js, the base appname (angular app name), root (root component name - usually must be loaded first), controller_postfix (extension string for controller files), and route_postfix (extension string for router files) variables can be edited to suit your own coding style. I like to use snake case (underscores) instead of camelcase.
 
 #### Add
 
-The add command will add a file to the given component. Files included in certain folders will be given a certain template when passed the right options.
+The add command will add a file to a given component. Files included in certain folders will be given a certain template when passed the right options.
 
 ```bash
 # add <component> <folder> <filename> [url]
@@ -193,16 +111,14 @@ The remap method remaps the current components folder structure and outputs it t
 npm run remap
 ```
 
-Note that the remap method will not affect the watch command because dotfiles are ignored in the watch script. In other words, because the watch script will ignore dotfiles, the watch script won't trigger an infinite loop of writing and rewriting the same `.app.json` file whenever the file is changed.
+The file `.app.json` is ignored by the watch script (otherwise, changing it would trigger a rebuild loop with abjure), and isn't meant to be edited directly.
 
 ### Watch
 
-Watches the source folder using Chokidar and then automatically runs `npm run build` when a new file or folder is added or an existing file or folder is changed within the source folder. Dotfiles are ignored from the watch list, so when the project is rebuilt using the build command, the file `.app.json` will not trigger an infinite loop of rebuilding and remapping the project.
+Watches the source folder using Chokidar and then automatically runs `npm run build` when a new file or folder is added or an existing file or folder is changed within the source folder. Any `.app.json` file is ignored in this watch list.
 
 ```bash
 npm run watch
-# equivalent to
-node ./scripts/watch.js "./src"
 ```
 
 ---
@@ -210,6 +126,10 @@ node ./scripts/watch.js "./src"
 ## Models
 
 The included models are used to help create some basic functionality for getting most types of projects up and running.
+
+### .app.json
+
+This file is automatically generated by the evoke script, and can be manually generated with the command `npm run remap`. It represents the given component structure of the application and is used by the `server.js` model to load all the angular components when the application loads.
 
 ### file.js
 
@@ -220,6 +140,14 @@ The File class is used for easily loading, saving, and "yoinking" the contents o
 **load(path, filename)** loads the file and sets all similar properties (non-function properties that are shared by both files) and their values onto this object.
 **yoink(path, filename)** "yoinks" the file by copying all the target file's properties and values onto this object.
 **ensure(path, filename)** ensures the file exists at the target path.
+
+### finder.js
+
+This is the custom finder tool - pressing `ctrl+f` will open the finder box, which is a kind of "search in page" tool within the app. It's attached to the root scope object in the main controller of the application.
+
+### keybinds.js
+
+This model is a sort of wrapper for [Mousetrap](https://www.npmjs.com/package/mousetrap), which helps bind keyboard combos to actions within the application.
 
 ### config.js
 
@@ -235,7 +163,7 @@ This model looks at `.app.json`, which should've been generated by the evoke rem
 
 ### sortable.js
 
-This file contains a very handy function that, when given a css selector for a search input and a table, will add search filtering and row sorting functionality to the given table. This is a simple client-based algo - it only works on a table that is completely displayed and doesn't integrate with AngularJS at all, but it's perfect for any project. Requires jQuery.
+This file contains a very handy function that, when given a css selector for a search input and a table, will add search filtering and row sorting functionality to the given table. This is a simple client-based algorithm - it only works on a table that is completely displayed and it doesn't integrate with AngularJS at all, but it's perfect for any basic project. Requires jQuery.
 
 ---
 
@@ -274,7 +202,7 @@ The following are some notable features implemented in the current base project.
 
 **New Window:** Any link in the app can open the same app in a new window. `ctrl + left click`, `shift + left click`, and `middle mouse click` can open a new instance of the app at the link's target location. Any link that starts with "http" will open the user's default internet browser at the link's target location.
 
-**Uniform Resource Locator:** The app allows spaces in the URL of the location bar and escapes the root `#!` URL prefix. Check `_main_controller.js` to see how some basic location bar functionality was added. Note that any double spaces will be changed to single spaces. This is kind of a neat feature for the purpose of using special URL strings that can represent filenames as route params, although not all types of characters are escaped - just single spaces. Be wary of the naming conventions used for components - I'd recommend only using lowercase and spaces and dashes in component names and any filenames that may be used in the URL.
+**Uniform Resource Locator:** The app allows spaces in the URL of the location bar and omits the root `#!` URL prefix. This functionality is implemented with the native javascript encodeURI and decodeURI functions. This is kind of a neat feature for the purpose of using special URL strings that can represent filenames as route params without having all the ugly URI escape characters that come along with it.
 
 **Angular-VS-Repeat:** A cool package that can change the way repeated elements are displayed within an AngularJS app. It will dramatically decrease load times and search/filtering speeds for very large data sets (like 1,000+ items in a single table). See the [official documentation](https://github.com/kamilkp/angular-vs-repeat) for more details on how to use it. (and yes, the demo page is broken for some reason, but the script actually works)
 
@@ -299,7 +227,6 @@ The following is a list of packages used in this project.
 * **[angular-vs-repeat](https://github.com/kamilkp/angular-vs-repeat):** A virtual repeater for displaying large data sets.
 * **[bootstrap](https://getbootstrap.com/):** The base CSS framework, imported into the main `style.scss` file. The Bootstrap javascript library is loaded manually in the main renderer index file.
 * **[brace](https://www.npmjs.com/package/brace):** A CommonJS Module style implementation of the Cloud 9 Ace editor.
-* **[chokidar](https://www.npmjs.com/package/chokidar):** Watches the `./src` directory for changes to automatically run the build script.
 * **[commander](https://www.npmjs.com/package/commander):** A module for creating command line applications. Required for `evoke.js` commands.
 * **[fs-extra](https://www.npmjs.com/package/fs-extra):** A drop-in replacement for the node's native fs module. Required for most of the models used in this project.
 * **[highlight.js](https://www.npmjs.com/package/highlight.js):** A library for adding syntax highlighting to rendered markdown files.
@@ -311,5 +238,8 @@ The following is a list of packages used in this project.
 
 ### Dev Dependencies
 
+* **[abjure](https://www.npmjs.com/package/abjure):** A command line interface utility that enables a special sort of intellisense by transpiling javascript files that contain certain patterns that "comment in" or "comment out" sections of code.
+* **[chokidar-cli](https://www.npmjs.com/package/chokidar-cli):** Watches the `./src` directory for changes to automatically run the build script.
 * **[electron](https://www.electronjs.org/):** This is an electron app, after all.
 * **[electron-builder](https://www.electron.build/):** The flavor of electron builder I chose. The build options are specified within `package.json`. Currently set to build a simple NSIS-based installer executable for windows.
+* **[zipadeedoodah](https://www.npmjs.com/package/zipadeedoodah):** A simple CLI zip utility based on glob patterns with minimal setup.
