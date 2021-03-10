@@ -133,6 +133,7 @@ var finder = {
         finder.open()
       })
     }, 1000)
+    return this
   },
   keybinds: require('../models/keybinds'),
   result: {
