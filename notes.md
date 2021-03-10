@@ -26,10 +26,10 @@ Developer notes on Morphmaster - completed features, todo roadmap, etc.
 
 ✅ Fixed improper new file copying with the scriptoid class. Now the script will only write files that are actually newer or edited in some way or don't exist in the target directory.
 
-❓ Keybinds??? Would be nice to have a page for all the custom keybind data, including globals, but that's probably for another type of project. Maybe for this one, the app will just load a basic set of keybinds that redo the way `ctrl+equals` and `ctrl+minus` work. Like, maybe this is all in a general "settings" page and that page would also include info on the main config.json file... probably just a "version 2.0" feature.
+✅ Keybinds??? Would be nice to have a page for all the custom keybind data, including globals, but that's probably for another type of project. Maybe for this one, the app will just load a basic set of keybinds that redo the way `ctrl+equals` and `ctrl+minus` work. Like, maybe this is all in a general "settings" page and that page would also include info on the main config.json file... probably just a "version 2.0" feature.
 
-❓ I still have no idea why the elapsed time in the evoke script is sometimes negative.
+✅ I still have no idea why the elapsed time in the evoke script is sometimes negative. !!! - it was because Date.getMilliseconds() is naughty, use Date.getTime() instead!
 
-❓❓❓ The language features of javascript force a newline character after all `/* ... */` patterns. Single line and certain inline features are buggy and don't play well with auto formatting in many circumstances!
+✅ The language features of javascript force a newline character after all `/* ... */` patterns. Single line and certain inline features are buggy and don't play well with auto formatting in many circumstances! -- solved by going back to the default VSCode code formatter. Beautify, and many other code formatters, push code that appears after a block comment to a new line.
 
 ❓ Refactor gen command to have an optional URL, in which case no controller or route will be assigned to it.
