@@ -64,8 +64,7 @@ module.exports = function ($scope, $rootScope) {
 
   root.md = require('../../../models/md')
 
-  root.finder = require('../../../models/finder')
-  root.finder.init()
+  root.finder = require('../../../models/finder').init()
 
   function back() {
     window.history.back()
