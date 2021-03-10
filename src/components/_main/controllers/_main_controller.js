@@ -21,6 +21,19 @@ module.exports = function ($scope, $rootScope) {
   var root = {} // initialize root scope object as a basic object in development
   /*...*/
 
+  // scrolling the main div hides the right click context menu
+  document.getElementById('main').onscroll = () => {
+    $('#context').addClass('d-none')
+  }
+
+  // when the right click context menu is blurred, hide it
+  document.getElementById('open-in-new').addEventListener('blur', () => {
+    $('#context').addClass('d-none')
+  })
+
+  root.set_context = set_context
+  root.display_context = display_context
+
   root.location = get_location()
   root.get_location = get_location
   root.navigate = navigate
@@ -41,6 +54,9 @@ module.exports = function ($scope, $rootScope) {
   })
 
   root.$on('$locationChangeSuccess', (event) => {
+    setTimeout(() => {
+      root.set_context() // set right click context menu for each page! ... still can't tell why it must be delayed, though!
+    }, 200)
     root.location = get_location()
     $('#form-location input').val(get_location())
   })
@@ -110,6 +126,36 @@ module.exports = function ($scope, $rootScope) {
 
   function close() {
     electron.remote.getCurrentWindow().close()
+  }
+
+  /**
+   * sets context menu events for all links on the page that don't have it set yet
+   */
+  function set_context() {
+    let links = document.querySelectorAll('a:not([hascontext])')
+    links.forEach(link => {
+      link.setAttribute('hascontext', '')
+      link.addEventListener('contextmenu', (event) => {
+        root.display_context(event.x, event.y, link.getAttribute('href'))
+      })
+    })
+  }
+
+  /**
+   * displays right click context menu at x, y position
+   * @param {number} x x position to display context menu
+   * @param {number} y y position to display context menu
+   * @param {string} href url to navigate to when "open in new" is clicked
+   */
+  function display_context(x, y, href) {
+    $('#context').removeClass('d-none').css({ left: x, top: y })
+    let el = document.getElementById('open-in-new')
+    el.focus()
+    $('#open-in-new').attr('href', href)
+    $('#open-in-new').on('click', () => {
+      console.log(`opening ${href} in new app window...`)
+      $(this).addClass('d-none')
+    })
   }
 
   /*---*/
