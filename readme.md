@@ -1,6 +1,6 @@
 # Morphmaster
 
-A special framework for building electron applications with AngularJS and Bootstrap on Windows.
+A simple starter boilerplate application for building electron applications with AngularJS and Bootstrap on Windows.
 
 Morphmaster also exists as a web application framework. Check out the [github page](https://github.com/Malcomian/Morphmaster-Web) for more details.
 
