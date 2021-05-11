@@ -1,7 +1,9 @@
-var start = new Date().getTime()
+var start = Date.now()
 
 const fs = require('fs-extra')
 const path = require('path')
+
+const _x_ = path.delimiter
 
 var project = require('../package.json')
 console.log(`Building project, "${project.name}"...`)
@@ -45,10 +47,7 @@ function get_files_list(target) {
   files = files.filter(dirent => dirent.isFile()).map(dirent => dirent.name)
   // remove filename extension
   files = files.map((file) => {
-    file = file.split('.')
-    file.pop()
-    file = file.join('.')
-    return file
+    return path.parse(file).name
   })
   return files
 }
@@ -57,7 +56,7 @@ function get_files_list(target) {
  * End - measure and print final elapsed time
  */
 function end() {
-  var end = new Date().getTime()
+  var end = Date.now()
   var elapsed = end - start
   console.log(`Finished in ${elapsed}ms!`)
 }
@@ -71,15 +70,15 @@ function generate(name, url) {
   console.log(`generating component ${name} at "${url}"...`)
 
   // ! the relative path to the components folder is unfortunately hard coded here...
-  let target = `${path.resolve('./src/components')}\\${name}`
+  let target = `${path.resolve('./src/components')}${_x_}${name}`
   if (fs.existsSync(target)) {
     console.log(`folder already exists`)
     return
   }
   // create folder structure
-  fs.outputFileSync(`${target}\\controllers\\${name}${controller_postfix}.js`, require('./lib/controller')())
-  fs.outputFileSync(`${target}\\routes\\${name}${route_postfix}.js`, require('./lib/route')(name, url, `${name}${controller_postfix}`, name))
-  fs.outputFileSync(`${target}\\views\\pages\\${name}.html`, require('./lib/html')(name))
+  fs.outputFileSync(`${target}${_x_}controllers${_x_}${name}${controller_postfix}.js`, require('./lib/controller')())
+  fs.outputFileSync(`${target}${_x_}routes${_x_}${name}${route_postfix}.js`, require('./lib/route')(name, url, `${name}${controller_postfix}`, name))
+  fs.outputFileSync(`${target}${_x_}views${_x_}pages${_x_}${name}.html`, require('./lib/html')(name))
   // remap() // disabled because of watcher
 }
 
@@ -91,26 +90,26 @@ function generate(name, url) {
  * @param {String} url optional URL string for defining route files
  */
 function add(component, folder, filename, url, controller, template) {
-  folder = folder.split('/').join('\\') // replace all slashes with backslashes for folder path
-  let target = `${path.resolve('./src/components')}\\${component}`
+  folder = folder.split('/').join('${_x_}') // replace all slashes with backslashes for folder path
+  let target = `${path.resolve('./src/components')}${_x_}${component}`
   switch (folder) {
     case 'controllers':
-      fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/controller')())
+      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/controller')())
       break;
     case 'routes':
-      fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/route')(component, url, controller, template))
+      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/route')(component, url, controller, template))
       break;
     case 'services':
-      fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/service')())
+      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/service')())
       break;
     case 'filters':
-      fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/filter')())
+      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/filter')())
       break;
     case 'directives':
-      fs.outputFileSync(`${target}\\${folder}\\${filename}`, require('./lib/directive')(filename))
+      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/directive')(filename))
       break;
     default:
-      fs.outputFileSync(`${target}\\${folder}\\${filename}`, '')
+      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, '')
       break;
   }
   // remap() // disabled because of watcher
@@ -143,7 +142,7 @@ function remap() {
   console.log(`Remapping ${components.length} project components...`)
 
   // console.log(result)
-  fs.writeFileSync(`${path.resolve('./src/models')}\\.app.json`, JSON.stringify(result, null, 2))
+  fs.writeFileSync(`${path.resolve('./src/models')}${_x_}.app.json`, JSON.stringify(result, null, 2))
   end()
 }
 
