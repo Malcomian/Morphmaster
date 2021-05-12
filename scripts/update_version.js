@@ -57,12 +57,10 @@ package.version = `${major}.${minor}.${patch}`;
 
 const path = require('path')
 
-const _x_ = path.delimiter
-
 var dirname = __dirname;
-dirname = dirname.split(_x_)
+dirname = dirname.split(path.sep)
 dirname.pop()
-dirname = dirname.join(_x_)
+dirname = dirname.join(path.sep)
 var target = path.join(dirname, `package.json`)
 
 var result = JSON.stringify(package, null, 2)

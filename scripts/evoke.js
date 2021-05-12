@@ -3,8 +3,6 @@ var start = Date.now()
 const fs = require('fs-extra')
 const path = require('path')
 
-const _x_ = path.delimiter
-
 var project = require('../package.json')
 console.log(`Building project, "${project.name}"...`)
 
@@ -70,15 +68,15 @@ function generate(name, url) {
   console.log(`generating component ${name} at "${url}"...`)
 
   // ! the relative path to the components folder is unfortunately hard coded here...
-  let target = `${path.resolve('./src/components')}${_x_}${name}`
+  let target = path.resolve(`${path.resolve('./src/components')}/${name}`)
   if (fs.existsSync(target)) {
     console.log(`folder already exists`)
     return
   }
   // create folder structure
-  fs.outputFileSync(`${target}${_x_}controllers${_x_}${name}${controller_postfix}.js`, require('./lib/controller')())
-  fs.outputFileSync(`${target}${_x_}routes${_x_}${name}${route_postfix}.js`, require('./lib/route')(name, url, `${name}${controller_postfix}`, name))
-  fs.outputFileSync(`${target}${_x_}views${_x_}pages${_x_}${name}.html`, require('./lib/html')(name))
+  fs.outputFileSync(path.resolve(`${target}/controllers/${name}${controller_postfix}.js`), require('./lib/controller')())
+  fs.outputFileSync(path.resolve(`${target}/routes/${name}${route_postfix}.js`), require('./lib/route')(name, url, `${name}${controller_postfix}`, name))
+  fs.outputFileSync(path.resolve(`${target}/views/pages/${name}.html`), require('./lib/html')(name))
   // remap() // disabled because of watcher
 }
 
@@ -90,26 +88,26 @@ function generate(name, url) {
  * @param {String} url optional URL string for defining route files
  */
 function add(component, folder, filename, url, controller, template) {
-  folder = folder.split('/').join('${_x_}') // replace all slashes with backslashes for folder path
-  let target = `${path.resolve('./src/components')}${_x_}${component}`
+  folder = folder.split('/').join(path.sep) // replace all slashes with path separator
+  let target = path.resolve(`./src/components/${component}`)
   switch (folder) {
     case 'controllers':
-      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/controller')())
+      fs.outputFileSync(path.resolve(`${target}/${folder}/${filename}`), require('./lib/controller')())
       break;
     case 'routes':
-      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/route')(component, url, controller, template))
+      fs.outputFileSync(path.resolve(`${target}/${folder}/${filename}`), require('./lib/route')(component, url, controller, template))
       break;
     case 'services':
-      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/service')())
+      fs.outputFileSync(path.resolve(`${target}/${folder}/${filename}`), require('./lib/service')())
       break;
     case 'filters':
-      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/filter')())
+      fs.outputFileSync(path.resolve(`${target}/${folder}/${filename}`), require('./lib/filter')())
       break;
     case 'directives':
-      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, require('./lib/directive')(filename))
+      fs.outputFileSync(path.resolve(`${target}/${folder}/${filename}`), require('./lib/directive')(filename))
       break;
     default:
-      fs.outputFileSync(`${target}${_x_}${folder}${_x_}${filename}`, '')
+      fs.outputFileSync(path.resolve(`${target}/${folder}/${filename}`), '')
       break;
   }
   // remap() // disabled because of watcher
@@ -142,7 +140,7 @@ function remap() {
   console.log(`Remapping ${components.length} project components...`)
 
   // console.log(result)
-  fs.writeFileSync(`${path.resolve('./src/models')}${_x_}.app.json`, JSON.stringify(result, null, 2))
+  fs.writeFileSync(path.resolve(`./src/models/.app.json`), JSON.stringify(result, null, 2))
   end()
 }
 

@@ -4,18 +4,16 @@
 const fs = require('fs-extra')
 const path = require('path')
 
-const _x_ = path.delimiter
-
 var package = require('../package.json')
 
 console.log(`Morphing package "${package.name}" @ "${__dirname}"...`)
 
 let dirname = __dirname
-dirname = dirname.split(_x_)
+dirname = dirname.split(path.sep)
 dirname.pop()
 let name = dirname[dirname.length - 1]
 
-dirname = dirname.join(_x_)
+dirname = dirname.join(path.sep)
 
 package.name = name
 console.log(`New package name: "${package.name}"`)
@@ -43,6 +41,6 @@ rl.question('New productName (defaults to package name): ', (answer) => {
 
 function save() {
   var result = JSON.stringify(package, null, 2)
-  fs.writeFileSync(`${dirname}${_x_}package.json`, result)
+  fs.writeFileSync(path.resolve(`${dirname}/package.json`), result)
   console.log(`Successfully updated package`)
 }
