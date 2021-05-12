@@ -121,6 +121,14 @@ Watches the source folder using Chokidar and then automatically runs `npm run bu
 npm run watch
 ```
 
+### Sass
+
+Runs a sass watcher/compiler for the main style.scss file.
+
+```bash
+npm run sass
+```
+
 ---
 
 ## Models

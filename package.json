@@ -13,6 +13,7 @@
     "add": "node ./scripts/evoke.js add",
     "remap": "node ./scripts/evoke.js remap",
     "watch": "npx chokidar \"./src\" -c \"npm run build\" -i \"**/.app.json\"",
+    "sass": "npx sass --watch ./src/css/style.scss ./src/css/style.css",
     "zip": "npx zipadeedoodah -o \"../<cwd>_<timestamp>\" -g \"*/**\" \"*.*\" -d -l 9 -i \"node_modules/**\" \".git/**\" \"build/**\" \"dist/**\" -p",
     "morph": "node ./scripts/morph.js",
     "update-version": "node ./scripts/update_version.js"
@@ -42,6 +43,7 @@
     "commander": "^7.2.0",
     "electron": "^12.0.5",
     "electron-builder": "^22.11.3",
+    "sass": "^1.32.12",
     "zipadeedoodah": "^1.0.1"
   },
   "keywords": [
