@@ -17,23 +17,23 @@
 <body>
   <div class="w-100 fixed-top">
     <div class="d-flex justify-content-end p-1 bg-secondary" ng-style="{'height': '48px'}">
-      <div class="w-100 d-flex align-items-center pl-2 text-light" ng-style="{'-webkit-app-region': 'drag'}">
+      <div class="w-100 d-flex align-items-center ps-2 text-light" ng-style="{'-webkit-app-region': 'drag'}">
         <span class="bg-light text-dark px-1"><b class="text-uppercase">{{project.name}}</b></span>
       </div>
       <div class="d-flex p-1">
-        <button id="minimize" ng-click="minimize()" class="btn btn-sm btn-dark ripple mr-1" ng-style="{'width': '5rem'}"><span class="mdi mdi-window-minimize"></span></button>
-        <button id="maximize" ng-click="maximize()" class="btn btn-sm btn-dark ripple mr-1" ng-style="{'width': '5rem'}"><span class="mdi mdi-window-maximize"></span></button>
-        <button id="close" ng-click="close()" class="btn btn-sm btn-dark border-0 hover-danger ripple" ng-style="{'width': '5rem'}"><span class="mdi mdi-close"></span></button>
+        <button id="minimize" ng-click="minimize()" class="btn btn-sm btn-dark ripple-light me-1" ng-style="{'width': '5rem'}"><span class="mdi mdi-window-minimize"></span></button>
+        <button id="maximize" ng-click="maximize()" class="btn btn-sm btn-dark ripple-light me-1" ng-style="{'width': '5rem'}"><span class="mdi mdi-window-maximize"></span></button>
+        <button id="close" ng-click="close()" class="btn btn-sm btn-dark border-0 hover-danger ripple-light" ng-style="{'width': '5rem'}"><span class="mdi mdi-close"></span></button>
       </div>
     </div>
   </div>
   <div class="bg-dark py-2" ng-style="{'margin-top': '48px'}">
-    <div class="container">
+    <div class="container px-0">
       <div id="navbar" ng-include="'./components/_main/views/templates/navbar.html'"></div>
     </div>
   </div>
   <div id="main" ng-style="{'height': 'calc(100vh - 150px)', 'overflow-y': 'scroll', 'padding-bottom': '50vh'}">
-    <div class="container">
+    <div class="container pt-3">
       <div id="view" ng-view></div>
     </div>
   </div>
@@ -47,15 +47,13 @@
         <div class="card-text">
           <div class="input-group">
             <input type="text" name="finder" id="finder" class="form-control">
-            <div class="input-group-append">
-              <div class="d-flex justify-content-center align-items-center border-top border-bottom" ng-style="{'width': '50px'}">
-                <span id="found"></span>
-              </div>
-              <button type="button" ng-click="finder.case()" class="btn btn-light ripple border {{finder.match | truthy:'active'}}"><span class="mdi mdi-format-letter-case"></span></button>
-              <button id="finder-previous" type="button" ng-click="finder.reverse()" class="btn btn-light ripple border py-0 px-1"><span class="mdi mdi-24px mdi-chevron-up"></span></button>
-              <button id="finder-next" type="button" ng-click="finder.search()" class="btn btn-light ripple border py-0 px-1"><span class="mdi mdi-24px mdi-chevron-down"></span></button>
-              <button type="button" class="btn btn-danger ripple" ng-click="finder.close()"><span class="mdi mdi-close"></span></button>
+            <div class="d-flex justify-content-center align-items-center border-top border-bottom" ng-style="{'width': '50px'}">
+              <span id="found"></span>
             </div>
+            <button type="button" ng-click="finder.case()" class="btn ripple border {{finder.match | truthy:'btn-secondary'}} {{finder.match | falsey:'btn-light'}}"><span class="mdi mdi-format-letter-case"></span></button>
+            <button id="finder-previous" type="button" ng-click="finder.reverse()" class="btn btn-light ripple border py-0 px-1"><span class="mdi mdi-24px mdi-chevron-up"></span></button>
+            <button id="finder-next" type="button" ng-click="finder.search()" class="btn btn-light ripple border py-0 px-1"><span class="mdi mdi-24px mdi-chevron-down"></span></button>
+            <button type="button" class="btn btn-danger ripple" ng-click="finder.close()"><span class="mdi mdi-close"></span></button>
           </div>
         </div>
       </div>
