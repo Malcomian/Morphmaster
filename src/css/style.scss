@@ -1,8 +1,7 @@
 // Variables
 // @import "../fonts/ComicNeue/font.css";
 
-$fonts: (
-  serif: "Times New Roman",
+$fonts: (serif: "Times New Roman",
   sans: "Comic Neue",
   mono: "Consolas",
   number: "Consolas",
@@ -67,29 +66,7 @@ $font-family-base: font(sans);
   overflow: hidden;
 }
 
-.ripple:after {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  background-image: radial-gradient(circle, #000 10%, transparent 10.01%);
-  background-repeat: no-repeat;
-  background-position: 50%;
-  transform: scale(10, 10);
-  opacity: 0;
-  transition: transform 0.5s, opacity 1s;
-}
-
-.ripple:active:after {
-  transform: scale(0, 0);
-  opacity: 0.25;
-  transition: 0s;
-}
-
+.ripple:after,
 .ripple-light:after {
   content: "";
   display: block;
@@ -98,20 +75,82 @@ $font-family-base: font(sans);
   height: 100%;
   top: 0;
   left: 0;
+  border-radius: 25%;
   pointer-events: none;
-  background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
-  background-repeat: no-repeat;
-  background-position: 50%;
-  transform: scale(10, 10);
+  transform: scale(2);
   opacity: 0;
-  transition: transform 0.5s, opacity 1s;
+  transition: transform 1s, opacity 2s;
+  transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
+.ripple:after {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.ripple-light:after {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.ripple:active:after,
 .ripple-light:active:after {
-  transform: scale(0, 0);
-  opacity: 0.25;
+  transform: scale(0);
+  opacity: 1;
   transition: 0s;
 }
+
+// ! old css ripple effect
+
+// .ripple,
+// .ripple-light {
+//   position: relative;
+//   overflow: hidden;
+// }
+
+// .ripple:after {
+//   content: "";
+//   display: block;
+//   position: absolute;
+//   width: 100%;
+//   height: 100%;
+//   top: 0;
+//   left: 0;
+//   pointer-events: none;
+//   background-image: radial-gradient(circle, #000 10%, transparent 10%);
+//   background-repeat: no-repeat;
+//   background-position: 50%;
+//   transform: scale(10);
+//   opacity: 0;
+//   transition: transform 0.5s, opacity 1s;
+// }
+
+// .ripple:active:after {
+//   transform: scale(0);
+//   opacity: 0.25;
+//   transition: 0s;
+// }
+
+// .ripple-light:after {
+//   content: "";
+//   display: block;
+//   position: absolute;
+//   width: 100%;
+//   height: 100%;
+//   top: 0;
+//   left: 0;
+//   pointer-events: none;
+//   background-image: radial-gradient(circle, #fff 10%, transparent 10%);
+//   background-repeat: no-repeat;
+//   background-position: 50%;
+//   transform: scale(10);
+//   opacity: 0;
+//   transition: transform 0.5s, opacity 1s;
+// }
+
+// .ripple-light:active:after {
+//   transform: scale(0);
+//   opacity: 0.25;
+//   transition: 0s;
+// }
 
 //* ---
 
@@ -179,25 +218,25 @@ body {
   animation-fill-mode: both;
 }
 
-body > .ng-enter {
+body>.ng-enter {
   // transition-delay: 0.5s;
   animation: fadeIn;
   animation-duration: 0.25s;
   opacity: 0;
 }
 
-body > .ng-enter-active {
+body>.ng-enter-active {
   opacity: 1;
 }
 
-body > .ng-leave {
+body>.ng-leave {
   // transition-delay: 0.5s;
   animation: fadeOut;
   animation-duration: 0s;
   opacity: 1;
 }
 
-body > .ng-leave-active {
+body>.ng-leave-active {
   opacity: 0;
 }
 
