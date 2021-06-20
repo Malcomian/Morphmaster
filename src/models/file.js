@@ -1,5 +1,5 @@
 const fs = require('fs-extra')
-const path = require('path')
+const resolve = require('path').resolve
 
 class File {
   constructor() {
@@ -15,7 +15,7 @@ class File {
    */
   create(path, filename) {
     this.filename = filename
-    if (fs.existsSync(path.resolve(`${path}/${this.filename}${this.ext}`))) {
+    if (fs.existsSync(resolve(`${path}/${this.filename}${this.ext}`))) {
       console.log(`there's already a file name, "${this.filename}${this.ext}"!`)
       return false
     }
@@ -31,7 +31,7 @@ class File {
   save(path) {
     if (this.filename == '') return false
     console.log(`saving file, "${this.filename}${this.ext}"...`)
-    fs.outputFileSync(path.resolve(`${path}/${this.filename}${this.ext}`), JSON.stringify(this))
+    fs.outputFileSync(resolve(`${path}/${this.filename}${this.ext}`), JSON.stringify(this))
     return true
   }
   /**
@@ -43,12 +43,12 @@ class File {
    */
   load(path, filename) {
     this.filename = filename
-    if (!fs.existsSync(path.resolve(`${path}/${this.filename}${this.ext}`))) {
+    if (!fs.existsSync(resolve(`${path}/${this.filename}${this.ext}`))) {
       console.log(`there's no file, "${this.filename}${this.ext}"!`)
       return false
     }
     console.log(`loading existing file, "${this.filename}${this.ext}"`)
-    let data = fs.readFileSync(path.resolve(`${path}/${this.filename}${this.ext}`))
+    let data = fs.readFileSync(resolve(`${path}/${this.filename}${this.ext}`))
     data = JSON.parse(data)
     for (const item in this) {
       if (this.hasOwnProperty(item) && data.hasOwnProperty(item)) {
@@ -66,12 +66,12 @@ class File {
    */
   copy(path, filename) {
     this.filename = filename
-    if (!fs.existsSync(path.resolve(`${path}/${this.filename}${this.ext}`))) {
+    if (!fs.existsSync(resolve(`${path}/${this.filename}${this.ext}`))) {
       console.log(`there's no file, "${this.filename}${this.ext}"!`)
       return false
     }
     console.log(`copying data off existing file, "${this.filename}${this.ext}"`)
-    let data = fs.readFileSync(path.resolve(`${path}/${this.filename}${this.ext}`))
+    let data = fs.readFileSync(resolve(`${path}/${this.filename}${this.ext}`))
     data = JSON.parse(data)
     for (const item in data) {
       if (data.hasOwnProperty(item)) {
@@ -91,7 +91,7 @@ class File {
    * @param {String} filename filename without extension
    */
   ensure(path, filename) {
-    if (!fs.existsSync(path.resolve(`${path}/${filename}${this.ext}`))) {
+    if (!fs.existsSync(resolve(`${path}/${filename}${this.ext}`))) {
       this.filename = filename
       return this.save(path)
     }
