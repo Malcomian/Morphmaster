@@ -63,6 +63,24 @@
   <div id="context" class="d-none bg-white border shadow" ng-style="{'position': 'absolute', 'z-index': '1200'}">
     <a hascontext target="_blank" href="#!" id="open-in-new" class="btn btn-light" ng-style="{'border-radius': '0'}">Open in new window <span class="mdi mdi-open-in-new"></span></a>
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="redirect-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal Title</h5>
+          <button type="button" class="ripple btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>Your last saved window location is <a hascontext href="{{last_url}}">{{last_url}}</a>, which is an external link. Are you sure you would like to navigate to it?</p>
+        </div>
+        <div class="modal-footer">
+          <a href="{{last_url}}" class="ripple btn btn-primary">Yes</a>
+          <button type="button" class="ripple btn btn-secondary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 <script defer src="./index.js"></script>

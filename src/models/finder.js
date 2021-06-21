@@ -21,16 +21,20 @@ var finder = {
     if (!this.searching) {
       this.clear()
       // console.log('first search...')
-      electron.remote.getCurrentWebContents().findInPage(query, {
-        matchCase: this.match
+      electron.ipcRenderer.send('findInPage', {
+        query: query, options: {
+          matchCase: this.match
+        }
       })
       this.searching = true
       this.last = query
     } else {
       // console.log('searching again...')
-      electron.remote.getCurrentWebContents().findInPage(query, {
-        findNext: true,
-        matchCase: this.match
+      electron.ipcRenderer.send('findInPage', {
+        query: query, options: {
+          findNext: true,
+          matchCase: this.match
+        }
       })
     }
   },
@@ -48,24 +52,23 @@ var finder = {
     }
     if (!this.searching) {
       this.clear()
-      electron.remote.getCurrentWebContents().findInPage(query, {
-        forward: false,
-        matchCase: this.match
+      electron.ipcRenderer.send('findInPage', {
+        query: query, options: {
+          forward: false,
+          matchCase: this.match
+        }
       })
       this.searching = true
       this.last = query
     } else {
-      electron.remote.getCurrentWebContents().findInPage(query, {
-        forward: false,
-        findNext: true,
-        matchCase: this.match
+      electron.ipcRenderer.send('findInPage', {
+        query: query, options: {
+          forward: false,
+          findNext: true,
+          matchCase: this.match
+        }
       })
     }
-    // console.log(`Reverse searching for "${query}"...`)
-    // electron.remote.getCurrentWebContents().findInPage(query, {
-    //   forward: false,
-    //   findNext: true
-    // })
   },
   /**
    * opens the finder window
@@ -90,7 +93,7 @@ var finder = {
    * Clears selection and resets results
    */
   clear() {
-    electron.remote.getCurrentWebContents().stopFindInPage('clearSelection')
+    electron.ipcRenderer.send('stopFindInPage', 'clearSelection')
     this.result = {
       activeMatchOrdinal: 0,
       finalUpdate: true,
@@ -110,7 +113,7 @@ var finder = {
   init() {
     // register the found in page event one second after app launch
     setTimeout(() => {
-      electron.remote.getCurrentWebContents().on('found-in-page', (event, result) => {
+      electron.ipcRenderer.on('found-in-page', (result) => {
         this.result = result
         console.log(`active: ${this.result.activeMatchOrdinal}, matches: ${this.result.matches}`)
         // matches is one less because the input counts as one

@@ -1,6 +1,7 @@
 const {
   app,
   BrowserWindow,
+  webContents,
   ipcMain,
   shell,
   globalShortcut
@@ -24,6 +25,43 @@ var config = new Config()
 const userData = app.getPath('userData')
 
 config.load(userData, 'config')
+
+// stop find in page handler
+ipcMain.on('stopFindInPage', (event, data) => {
+  webContents.getFocusedWebContents().stopFindInPage(data)
+})
+
+// find in page handler
+ipcMain.on('findInPage', (event, data) => {
+  console.log('find in page')
+  webContents.getFocusedWebContents().findInPage(data.query, data.options)
+})
+
+// handle window maximize
+ipcMain.on('maximize', (event, data) => {
+  let win = BrowserWindow.getFocusedWindow()
+  console.log(`maximizing window ${win.id}`)
+  if (win.isMaximized()) {
+    win.unmaximize()
+  } else {
+    win.maximize()
+  }
+})
+
+// handle window reload
+ipcMain.on('reload', (event, data) => {
+  BrowserWindow.getFocusedWindow().reload()
+})
+
+// handle window minimize
+ipcMain.on('minimize', (event, data) => {
+  BrowserWindow.getFocusedWindow().minimize()
+})
+
+// hanlde window close
+ipcMain.on('close', (event, data) => {
+  BrowserWindow.getFocusedWindow().close()
+})
 
 // Commands can be sent from the renderer to the main process
 // errors and output are sent back in a reply
@@ -70,7 +108,7 @@ function create_window(options) {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      enableRemoteModule: true,
+      // enableRemoteModule: true,
       // devTools: false
     }
   })
@@ -87,13 +125,20 @@ function create_window(options) {
     config.maximized = false
   })
 
+  // handle found in page event
+  win.webContents.on('found-in-page', (event, result) => {
+    console.log(`found in page`)
+    win.webContents.send('found-in-page', result)
+  })
+
   // ? The new window event triggers on shift+click or ctrl+click URLs and target="_blank" links
-  win.webContents.on('new-window', (event, ...args) => {
-    let url = args[0];
+  win.webContents.setWindowOpenHandler((details) => {
+    console.log(details)
+    const { url } = details
     if (url.startsWith('http')) {
       shell.openExternal(url)
+      return { action: 'deny' }
     } else {
-      // create a new window based on the current bounds and given URL
       let bounds = win.getBounds();
       create_window({
         url: url,
@@ -104,9 +149,29 @@ function create_window(options) {
         min_width: config.min_width,
         min_height: config.min_height,
       })
+      return { action: 'deny' }
     }
-    event.preventDefault();
   })
+
+  // win.webContents.on('new-window', (event, ...args) => {
+  //   let url = args[0];
+  //   if (url.startsWith('http')) {
+  //     shell.openExternal(url)
+  //   } else {
+  //     // create a new window based on the current bounds and given URL
+  //     let bounds = win.getBounds();
+  //     create_window({
+  //       url: url,
+  //       x: bounds.x + win_offset,
+  //       y: bounds.y + win_offset,
+  //       width: bounds.width,
+  //       height: bounds.height,
+  //       min_width: config.min_width,
+  //       min_height: config.min_height,
+  //     })
+  //   }
+  //   event.preventDefault();
+  // })
 
   // show the page only once it's ready
   win.once('ready-to-show', () => {
@@ -117,9 +182,9 @@ function create_window(options) {
       let url = options.url
       url = url.split('index.html').pop()
       console.log(`redirecting window ${win.id} to ${url}`)
-      win.webContents.send(`redirect-${win.id}`, url)
+      win.webContents.send(`redirect`, url)
     } else if (config.last_url) {
-      win.webContents.send(`redirect-${win.id}`, config.last_url)
+      win.webContents.send(`redirect`, config.last_url)
     }
     win.show()
   })

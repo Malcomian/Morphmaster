@@ -4,8 +4,7 @@ const {
   electron,
   fs,
   $,
-  Popper,
-  Bootstrap,
+  bootstrap,
   server,
   _,
 } = require('../../../index')
@@ -48,17 +47,22 @@ module.exports = function ($scope, $rootScope) {
     $('#context').addClass('d-none')
   })
 
-  root.set_context = set_context
   root.display_context = display_context
 
   root.location = get_location()
   root.get_location = get_location
   root.navigate = navigate
 
-  electron.ipcRenderer.on(`redirect-${electron.remote.getCurrentWebContents().id}`, (event, data) => {
-    // console.log('got redirect data')
-    // ? redirect to the given url, but use the replace method to replace the first history state
-    window.location.replace(data)
+  electron.ipcRenderer.on(`redirect`, (event, data) => {
+    console.log(`redirecting to ${data}`)
+    root.last_url = data
+    root.$digest()
+    if (data.startsWith('http') || data.startsWith('file')) {
+      let redirect = new bootstrap.Modal(document.getElementById('redirect-modal'))
+      redirect.show()
+    } else {
+      window.location.replace(data)
+    }
   })
 
   var project = require('../../../../package.json')
@@ -70,10 +74,15 @@ module.exports = function ($scope, $rootScope) {
     console.log('changing location...')
   })
 
+  // this document click listener handles all right clicks for links
+  document.addEventListener('contextmenu', event => {
+    let target = event.target
+    if (target.hasAttribute('hascontext')) {
+      root.display_context(event.x, event.y, target.getAttribute('href'))
+    }
+  })
+
   root.$on('$locationChangeSuccess', (event) => {
-    setTimeout(() => {
-      root.set_context() // set right click context menu for each page! ... still can't tell why it must be delayed, though!
-    }, 200)
     root.location = get_location()
     $('#form-location input').val(get_location())
   })
@@ -107,10 +116,6 @@ module.exports = function ($scope, $rootScope) {
     window.history.forward()
   }
 
-  function refresh() {
-    electron.remote.getCurrentWebContents().reload()
-  }
-
   function select_location() {
     document.getElementById('location').select()
   }
@@ -129,33 +134,20 @@ module.exports = function ($scope, $rootScope) {
     return decodeURI(hash)
   }
 
+  function refresh() {
+    electron.ipcRenderer.send(`reload`)
+  }
+
   function minimize() {
-    electron.remote.getCurrentWindow().minimize()
+    electron.ipcRenderer.send(`minimize`)
   }
 
   function maximize() {
-    if (electron.remote.getCurrentWindow().isMaximized()) {
-      electron.remote.getCurrentWindow().unmaximize()
-    } else {
-      electron.remote.getCurrentWindow().maximize()
-    }
+    electron.ipcRenderer.send(`maximize`)
   }
 
   function close() {
-    electron.remote.getCurrentWindow().close()
-  }
-
-  /**
-   * sets context menu events for all links on the page that don't have it set yet
-   */
-  function set_context() {
-    let links = document.querySelectorAll('a:not([hascontext])')
-    links.forEach(link => {
-      link.setAttribute('hascontext', '')
-      link.addEventListener('contextmenu', (event) => {
-        root.display_context(event.x, event.y, link.getAttribute('href'))
-      })
-    })
+    electron.ipcRenderer.send(`close`)
   }
 
   /**
@@ -180,6 +172,10 @@ module.exports = function ($scope, $rootScope) {
   /*...*/
 
 }
+
+/*---*/
+
+// AngularJS rootScope documentation
 
 /**
  * * Creates a new child scope
@@ -328,3 +324,5 @@ function $emit(name, args) { }
  * @returns {object} Event object, see $rootScope.Scope
  */
 function $broadcast(name, args) { }
+
+/*...*/

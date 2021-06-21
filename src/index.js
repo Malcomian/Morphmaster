@@ -3,6 +3,7 @@ const electron = require('electron');
 const fs = require('fs-extra');
 const $ = require('jquery');
 const _ = require('lodash')
+const bootstrap = require('bootstrap/dist/js/bootstrap')
 
 // ? prevent default drag behavior so that links aren't weird
 $('*').on('dragstart', (event) => {
@@ -17,18 +18,11 @@ var server = new Server();
 console.log(`Remove this at build!`)
 module.exports = {
   electron,
-  shell,
-  clipboard,
-  webFrame,
-  remote,
-  nativeImage,
-  ipcRenderer,
   fs,
   $,
-  Popper,
-  Bootstrap,
+  _,
+  bootstrap,
   server,
   finder,
-  _
 }
 /*...*/
