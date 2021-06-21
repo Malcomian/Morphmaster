@@ -47,6 +47,12 @@ module.exports = function ($scope, $rootScope) {
     $('#context').addClass('d-none')
   })
 
+  root.progress = require('nprogress/nprogress')
+  root.progress.configure({
+    showSpinner: false,
+    parent: '#progress-bar'
+  })
+
   root.display_context = display_context
 
   root.location = get_location()
@@ -72,6 +78,7 @@ module.exports = function ($scope, $rootScope) {
 
   root.$on('$locationChangeStart', (event) => {
     console.log('changing location...')
+    root.progress.start()
   })
 
   // this document click listener handles all right clicks for links
@@ -85,6 +92,7 @@ module.exports = function ($scope, $rootScope) {
   root.$on('$locationChangeSuccess', (event) => {
     root.location = get_location()
     $('#form-location input').val(get_location())
+    root.progress.done()
   })
 
   // example of sending and receiving custom commands and outputs to/from the main process

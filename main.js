@@ -151,26 +151,6 @@ function create_window(options) {
     }
   })
 
-  // win.webContents.on('new-window', (event, ...args) => {
-  //   let url = args[0];
-  //   if (url.startsWith('http')) {
-  //     shell.openExternal(url)
-  //   } else {
-  //     // create a new window based on the current bounds and given URL
-  //     let bounds = win.getBounds();
-  //     create_window({
-  //       url: url,
-  //       x: bounds.x + win_offset,
-  //       y: bounds.y + win_offset,
-  //       width: bounds.width,
-  //       height: bounds.height,
-  //       min_width: config.min_width,
-  //       min_height: config.min_height,
-  //     })
-  //   }
-  //   event.preventDefault();
-  // })
-
   // show the page only once it's ready
   win.once('ready-to-show', () => {
     // win.setMenu(null); // resets the menu
