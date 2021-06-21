@@ -33,7 +33,6 @@ ipcMain.on('stopFindInPage', (event, data) => {
 
 // find in page handler
 ipcMain.on('findInPage', (event, data) => {
-  console.log('find in page')
   webContents.getFocusedWebContents().findInPage(data.query, data.options)
 })
 
@@ -58,7 +57,7 @@ ipcMain.on('minimize', (event, data) => {
   BrowserWindow.getFocusedWindow().minimize()
 })
 
-// hanlde window close
+// handle window close
 ipcMain.on('close', (event, data) => {
   BrowserWindow.getFocusedWindow().close()
 })
@@ -127,7 +126,6 @@ function create_window(options) {
 
   // handle found in page event
   win.webContents.on('found-in-page', (event, result) => {
-    console.log(`found in page`)
     win.webContents.send('found-in-page', result)
   })
 

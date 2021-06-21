@@ -113,7 +113,7 @@ var finder = {
   init() {
     // register the found in page event one second after app launch
     setTimeout(() => {
-      electron.ipcRenderer.on('found-in-page', (result) => {
+      electron.ipcRenderer.on('found-in-page', (event, result) => {
         this.result = result
         console.log(`active: ${this.result.activeMatchOrdinal}, matches: ${this.result.matches}`)
         // matches is one less because the input counts as one
