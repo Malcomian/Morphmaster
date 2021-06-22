@@ -68,6 +68,14 @@ module.exports = function ($scope, $rootScope) {
       root.terminal.getSession().setUseWrapMode(!root.terminal.getSession().getUseWrapMode())
     }
   })
+  root.terminal.commands.addCommand({
+    name: 'search',
+    bindKey: 'Ctrl-f',
+    exec: () => {
+      console.log('finding...')
+      root.terminal.execCommand('find')
+    }
+  })
 
   root.location = get_location()
   root.get_location = get_location

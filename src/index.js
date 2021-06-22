@@ -9,6 +9,7 @@ var ace = require('brace')
 require('brace/mode/text')
 require('brace/theme/monokai')
 require('brace/theme/github')
+require('brace/ext/searchbox')
 
 // ? prevent default drag behavior so that links aren't weird
 $('*').on('dragstart', (event) => {
