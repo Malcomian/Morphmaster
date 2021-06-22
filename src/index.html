@@ -33,34 +33,15 @@
       <div id="navbar" ng-include="'./components/_main/views/templates/navbar.html'"></div>
     </div>
   </div>
-  <div id="main" ng-style="{'height': 'calc(100vh - 150px)', 'overflow-y': 'scroll', 'padding-bottom': '50vh'}">
+  <div id="main" ng-style="{'height': 'calc(100vh - 102px)', 'overflow-y': 'scroll', 'padding-bottom': '50vh'}">
     <div class="container pt-3">
       <div id="view" ng-view></div>
     </div>
   </div>
-  <div class="bg-light fixed-bottom py-1 px-1 border">
+  <div class="bg-light fixed-bottom py-1 px-1 border" ng-style="{'margin-right': '17px'}">
     <div ng-include="'./components/_main/views/templates/location.html'"></div>
   </div>
-  <!-- ! -->
-  <div id="finder-div" class="d-none" ng-style="{'position': 'absolute', 'z-index': '1100', 'bottom': '72px', 'width': 'calc(100vw - 50px)', 'left': '25px'}">
-    <div class="card shadow">
-      <div class="card-body">
-        <div class="card-text">
-          <div class="input-group">
-            <input type="text" name="finder" id="finder" class="form-control">
-            <div class="d-flex justify-content-center align-items-center border-top border-bottom" ng-style="{'width': '50px'}">
-              <span id="found"></span>
-            </div>
-            <button type="button" ng-click="finder.case()" class="btn ripple border {{finder.match | truthy:'btn-secondary'}} {{finder.match | falsey:'btn-light'}}"><span class="mdi mdi-format-letter-case"></span></button>
-            <button id="finder-previous" type="button" ng-click="finder.reverse()" class="btn btn-light ripple border py-0 px-1"><span class="mdi mdi-24px mdi-chevron-up"></span></button>
-            <button id="finder-next" type="button" ng-click="finder.search()" class="btn btn-light ripple border py-0 px-1"><span class="mdi mdi-24px mdi-chevron-down"></span></button>
-            <button type="button" class="btn btn-danger ripple" ng-click="finder.close()"><span class="mdi mdi-close"></span></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ! -->
+  <!-- Context -->
   <div id="context" class="d-none bg-white border shadow" ng-style="{'position': 'absolute', 'z-index': '1200'}">
     <a hascontext target="_blank" href="#!" id="open-in-new" class="btn btn-light" ng-style="{'border-radius': '0'}">Open in new window <span class="mdi mdi-open-in-new"></span></a>
   </div>
@@ -82,9 +63,40 @@
       </div>
     </div>
   </div>
+  <!-- Terminal -->
+  <div ng-style="{'margin-right': '17px', 'height': '300px'}" class="offcanvas offcanvas-bottom border" tabindex="-1" id="terminal" aria-labelledby="terminal-label" data-bs-backdrop="false" data-bs-scroll="true">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="terminal-label">Terminal</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body small">
+      <div id="terminal-wrapper" class="position-absolute" ng-style="{'top': '64px', 'right': '0', 'left': '0', 'bottom': '0'}">
+        <div id="terminal-editor" class="editor position-absolute w-100 h-100"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Finder -->
+  <div id="finder-div" class="d-none" ng-style="{'position': 'absolute', 'z-index': '1100', 'bottom': '72px', 'width': 'calc(100vw - 50px)', 'left': '25px'}">
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="card-text">
+          <div class="input-group">
+            <input type="text" name="finder" id="finder" class="form-control">
+            <div class="d-flex justify-content-center align-items-center border-top border-bottom" ng-style="{'width': '50px'}">
+              <span id="found"></span>
+            </div>
+            <button type="button" ng-click="finder.case()" class="btn ripple border {{finder.match | truthy:'btn-secondary'}} {{finder.match | falsey:'btn-light'}}"><span class="mdi mdi-format-letter-case"></span></button>
+            <button id="finder-previous" type="button" ng-click="finder.reverse()" class="btn btn-light ripple border py-0 px-1"><span class="mdi mdi-24px mdi-chevron-up"></span></button>
+            <button id="finder-next" type="button" ng-click="finder.search()" class="btn btn-light ripple border py-0 px-1"><span class="mdi mdi-24px mdi-chevron-down"></span></button>
+            <button type="button" class="btn btn-danger ripple" ng-click="finder.close()"><span class="mdi mdi-close"></span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Progress Bar -->
+  <div id="progress-bar" class="w-100 position-absolute" ng-style="{'bottom': '46px', 'height': '3px', 'z-index': '1050'}"></div>
 </body>
-
-<div id="progress-bar" class="w-100 position-absolute" ng-style="{'bottom': '46px', 'height': '3px', 'z-index': '1050'}"></div>
 
 <script defer src="./index.js"></script>
 

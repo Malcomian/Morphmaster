@@ -7,6 +7,7 @@ const {
   bootstrap,
   server,
   _,
+  ace,
 } = require('../../../index')
 /*...*/
 
@@ -54,6 +55,19 @@ module.exports = function ($scope, $rootScope) {
   })
 
   root.display_context = display_context
+
+  root.terminal = ace.edit('terminal-editor')
+  root.terminal.getSession().setMode('ace/mode/text')
+  root.terminal.setTheme('ace/theme/github')
+  root.terminal.setFontSize('16px')
+  root.terminal.setShowPrintMargin(false)
+  root.terminal.commands.addCommand({
+    name: 'word wrap',
+    bindKey: 'Alt-z',
+    exec: () => {
+      root.terminal.getSession().setUseWrapMode(!root.terminal.getSession().getUseWrapMode())
+    }
+  })
 
   root.location = get_location()
   root.get_location = get_location
