@@ -8,5 +8,7 @@ module.exports = function ($scope, $rootScope) {
   var root = require('../../_main/controllers/_main_controller')
   /*...*/
 
-  $('#readme').html(root.md('../readme.md'))
+  root.md.get('../readme.md', (data) => {
+    $('#readme').html(root.md.render(data))
+  })
 }
