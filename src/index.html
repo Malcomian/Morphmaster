@@ -38,7 +38,7 @@
       <div id="view" ng-view></div>
     </div>
   </div>
-  <div class="bg-light fixed-bottom py-1 px-1 border" ng-style="{'margin-right': '17px'}">
+  <div class="bg-light fixed-bottom py-1 px-1 border" ng-style="{'margin-right': '17px', 'z-index': '1080'}">
     <div ng-include="'./components/_main/views/templates/location.html'"></div>
   </div>
   <!-- Context -->
@@ -95,7 +95,7 @@
     </div>
   </div>
 <!-- Progress Bar -->
-  <div id="progress-bar" class="w-100 position-absolute" ng-style="{'bottom': '46px', 'height': '3px', 'z-index': '1050'}"></div>
+  <div id="progress-bar" class="w-100 position-absolute" ng-style="{'bottom': '46px', 'height': '3px', 'z-index': '1100'}"></div>
 </body>
 
 <script defer src="./index.js"></script>
