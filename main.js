@@ -80,8 +80,8 @@ ipcMain.on('command', (event, command) => {
       console.log(`Signal received: ${error.signal}`)
       data.error = error
     }
-    console.log(`Child process STDOUT: ${stdout}`)
-    console.log(`Child process STDERR: ${stderr}`)
+    if (stdout) { console.log(`Child process STDOUT: ${stdout}`) }
+    if (stderr) { console.log(`Child process STDERR: ${stderr}`) }
     data.stdout = stdout
     data.stderr = stderr
     event.reply('run-output', data)
