@@ -106,7 +106,7 @@ module.exports = function ($scope, $rootScope) {
   // this document click listener handles all right clicks for links
   document.addEventListener('contextmenu', event => {
     let target = event.target
-    if (target.hasAttribute('hascontext')) {
+    if (target.hasAttribute('href')) {
       root.display_context(event.x, event.y, target.getAttribute('href'))
     }
   })
