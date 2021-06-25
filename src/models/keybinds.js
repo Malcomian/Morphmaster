@@ -40,7 +40,7 @@ class Keybinds {
    * Triggers all the actions bound to the given combos
    * @param {[string]} combos An array of combination strings
    */
-  triggers(combos) {
+  triggerAll(combos) {
     combos.forEach((combo) => this.hotkeys.trigger(combo))
   }
   /**
@@ -54,7 +54,7 @@ class Keybinds {
    * Unbinds multiple combinations
    * @param {[string]} combos An array of combination strings
    */
-  unbinds(combos) {
+  unbindAll(combos) {
     combos.forEach((combo) => this.hotkeys.unbind(combo))
   }
 }

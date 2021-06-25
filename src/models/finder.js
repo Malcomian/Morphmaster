@@ -123,7 +123,7 @@ var finder = {
       $('#finder').on('focus', () => {
         finder.keybinds.bindGlobal('esc', () => {
           finder.close()
-          finder.keybinds.unbinds(['esc', 'enter', 'shift+enter'])
+          finder.keybinds.unbindAll(['esc', 'enter', 'shift+enter'])
         })
         finder.keybinds.bindGlobal('enter', (event) => {
           finder.search()
