@@ -159,7 +159,7 @@ This model is a sort of wrapper for [Mousetrap](https://www.npmjs.com/package/mo
 
 ### config.js
 
-This model helps create config.json files in the APPDATA subfolder that matches the name of your current project. It stores some basic application configuration info, like the last known x/y position, width/height, min with/min height, zoom level, and whether the app is maximized. There are a few ipcRenderer/ipcMain connections that coordinate the saving and loading of this configuration file. The app should remember the last state that it was in when it was closed and when it is loaded again, it will launch in exactly the same place with exactly the same size and location parameters. The object that contains this model is passed to the renderer and is attached to the global object in main.js.
+This model helps create config.json files in the APPDATA subfolder that matches the name of your current project. It stores some basic application configuration info, like the last known x/y position, width/height, min with/min height, zoom level, and whether the app is maximized. There are a few ipcRenderer/ipcMain connections that coordinate the saving and loading of this configuration file. The app should remember the last state that it was in when it was closed and when it is loaded again, it will launch in exactly the same place with exactly the same size and location parameters.
 
 ### md.js
 
