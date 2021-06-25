@@ -138,6 +138,10 @@ module.exports = function ($scope, $rootScope) {
 
   root.finder = require('../../../models/finder').init()
 
+  vm.print = () => {
+    electron.ipcRenderer.send('print')
+  }
+
   function back() {
     window.history.back()
   }

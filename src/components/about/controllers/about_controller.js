@@ -1,3 +1,15 @@
+/*---*/
+const {
+  electron,
+  fs,
+  $,
+  bootstrap,
+  server,
+  _,
+  ace,
+} = require('../../../index')
+/*...*/
+
 module.exports = function ($scope, $rootScope) {
   /*+++*/
   // var vm = $scope

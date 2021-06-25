@@ -26,6 +26,21 @@ const userData = app.getPath('userData')
 
 config.load(userData, 'config')
 
+ipcMain.on('print', (event, data) => {
+  webContents.getFocusedWebContents().print({
+    silent: false,
+    printBackground: true,
+    color: true,
+    margin: {
+      marginType: 'printableArea'
+    },
+    landscape: false,
+    pagesPerSheet: 1,
+    collate: false,
+    copies: 1,
+  })
+})
+
 // stop find in page handler
 ipcMain.on('stopFindInPage', (event, data) => {
   webContents.getFocusedWebContents().stopFindInPage(data)
@@ -67,7 +82,7 @@ ipcMain.on('close', (event, data) => {
 ipcMain.on('command', (event, command) => {
   console.log(`$ ${command}`)
 
-  var data = {
+  let data = {
     error: false,
     stdout: false,
     stderr: false
