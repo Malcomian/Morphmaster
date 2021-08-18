@@ -1,14 +1,6 @@
 /*---*/
 console.log(`Remove this at build!`)
-const {
-  electron,
-  fs,
-  $,
-  bootstrap,
-  server,
-  _,
-  ace,
-} = require('../../../index')
+const { $, _, ace, bootstrap, electron, finder, fs, server } = require('../../../index')
 /*...*/
 
 module.exports = function ($scope, $rootScope) {
@@ -56,26 +48,48 @@ module.exports = function ($scope, $rootScope) {
 
   root.display_context = display_context
 
-  root.terminal = ace.edit('terminal-editor')
-  root.terminal.getSession().setMode('ace/mode/text')
-  root.terminal.setTheme('ace/theme/github')
-  root.terminal.setFontSize('16px')
-  root.terminal.setShowPrintMargin(false)
-  root.terminal.commands.addCommand({
-    name: 'word wrap',
-    bindKey: 'Alt-z',
-    exec: () => {
-      root.terminal.getSession().setUseWrapMode(!root.terminal.getSession().getUseWrapMode())
-    }
-  })
-  root.terminal.commands.addCommand({
-    name: 'search',
-    bindKey: 'Ctrl-f',
-    exec: () => {
-      console.log('finding...')
-      root.terminal.execCommand('find')
-    }
-  })
+  root.cmd = {
+    input: '',
+    lead: '',
+    select: () => {
+      document.getElementById('terminal-input').focus()
+      document.getElementById('terminal-input').select()
+    },
+    parse: () => {
+      console.log($('#terminal-input').val())
+      $('#terminal-input').val('')
+      $('#terminal-input-lead').val('')
+    },
+    interpret: () => {
+      let command = $('#terminal-input').val()
+      if ((command) == 'hi') {
+        root.cmd.lead = '  !!!'
+      } else {
+        root.cmd.lead = ''
+      }
+    },
+  }
+  // ! old terminal
+  // root.terminal = ace.edit('terminal-editor')
+  // root.terminal.getSession().setMode('ace/mode/text')
+  // root.terminal.setTheme('ace/theme/github')
+  // root.terminal.setFontSize('16px')
+  // root.terminal.setShowPrintMargin(false)
+  // root.terminal.commands.addCommand({
+  //   name: 'word wrap',
+  //   bindKey: 'Alt-z',
+  //   exec: () => {
+  //     root.terminal.getSession().setUseWrapMode(!root.terminal.getSession().getUseWrapMode())
+  //   }
+  // })
+  // root.terminal.commands.addCommand({
+  //   name: 'search',
+  //   bindKey: 'Ctrl-f',
+  //   exec: () => {
+  //     console.log('finding...')
+  //     root.terminal.execCommand('find')
+  //   }
+  // })
 
   root.location = get_location()
   root.get_location = get_location
