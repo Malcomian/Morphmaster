@@ -69,10 +69,27 @@
       <h5 class="offcanvas-title" id="terminal-label">Terminal</h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">
-      <div id="terminal-wrapper" class="position-absolute" ng-style="{'top': '64px', 'right': '0', 'left': '0', 'bottom': '0', 'height': '233px'}">
-        <div id="terminal-editor" class="editor position-absolute w-100 h-100"></div>
+    <div class="offcanvas-body monospace">
+      <div id="terminal-body"></div>
+      <!-- terminal autocomplete text -->
+      <div id="terminal-lead" class="position-absolute" ng-style="{'bottom': '25px', 'width': 'calc(100vw - 50px)'}">
+        <div class="input-group">
+          <button type="button" class="btn btn-light"><span class="mdi mdi-console-line"></span></button>
+          <input type="text" name="terminal-lead" id="terminal-input-lead" class="form-control text-secondary" ng-model="cmd.lead">
+        </div>
       </div>
+      <!-- terminal input -->
+      <div id="terminal-input-wrapper" class="position-absolute" ng-style="{'bottom': '25px', 'width': 'calc(100vw - 50px)'}">
+        <form ng-submit="cmd.parse()" novalidate>
+          <div class="input-group">
+            <button type="button" class="btn btn-light border ripple"  ng-click="cmd.select()"><span class="mdi mdi-console-line"></span></button>
+            <input type="text" id="terminal-input" class="form-control bg-transparent" ng-change="cmd.interpret()" ng-model="cmd.input">
+          </div>
+        </form>
+      </div>
+      <!-- <div id="terminal-wrapper" class="position-absolute" ng-style="{'top': '64px', 'right': '0', 'left': '0', 'bottom': '0', 'height': '233px'}">
+        <div id="terminal-editor" class="editor position-absolute w-100 h-100"></div>
+      </div> -->
     </div>
   </div>
   <!-- Finder -->
@@ -94,7 +111,7 @@
       </div>
     </div>
   </div>
-<!-- Progress Bar -->
+  <!-- Progress Bar -->
   <div id="progress-bar" class="position-absolute" ng-style="{'bottom': '46px', 'height': '3px', 'z-index': '1100', 'width': 'calc(100vw - 17px)'}"></div>
 </body>
 
