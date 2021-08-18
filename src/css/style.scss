@@ -57,6 +57,23 @@ $font-family-base: font(sans);
   font-family: font(mono);
 }
 
+.unselectable {
+  user-select: none;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .page-break {
+    page-break-after: always;
+  }
+
+  .last-page {
+    page-break-after: avoid;
+  }
+}
 
 // * ripple
 

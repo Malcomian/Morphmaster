@@ -48,6 +48,7 @@ module.exports = function ($scope, $rootScope) {
 
   root.display_context = display_context
 
+  // terminal commands
   root.cmd = {
     input: '',
     lead: '',
@@ -56,11 +57,13 @@ module.exports = function ($scope, $rootScope) {
       document.getElementById('terminal-input').select()
     },
     parse: () => {
+      console.log('parsing command...')
       console.log($('#terminal-input').val())
       $('#terminal-input').val('')
       $('#terminal-input-lead').val('')
     },
     interpret: () => {
+      console.log('interpreting command...')
       let command = $('#terminal-input').val()
       if ((command) == 'hi') {
         root.cmd.lead = '  !!!'
@@ -68,7 +71,32 @@ module.exports = function ($scope, $rootScope) {
         root.cmd.lead = ''
       }
     },
+    tab_complete: () => {
+      console.log('tab completion!')
+      let command = $('#terminal-input').val()
+      let lead = $('#terminal-input-lead').val()
+      lead = lead.trim()
+      $('#terminal-input').val(`${command}${lead}`)
+      $('#terminal-input-lead').val('')
+    }
   }
+
+  // any time escape is pressed, blur the active element at least
+  document.addEventListener('keydown', (event) => {
+    if (event.code === 'Escape') {
+      document.activeElement.blur()
+    }
+  })
+
+  // handle what happens when tab is pressed when inside the terminal input
+  // should have some logic to replace terminal input text with the leading terminal input text
+  document.getElementById('terminal-input').addEventListener('keydown', (event) => {
+    if (event.code === 'Tab') {
+      event.preventDefault()
+      root.cmd.tab_complete()
+    }
+  }, false)
+
   // ! old terminal
   // root.terminal = ace.edit('terminal-editor')
   // root.terminal.getSession().setMode('ace/mode/text')

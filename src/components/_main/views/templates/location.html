@@ -5,7 +5,7 @@
     <button type="button" class="btn btn-light border ripple" ng-click="refresh()"><span class="mdi mdi-refresh"></span></button>
     <button type="button" class="btn btn-light border ripple" ng-click="print()"><span class="mdi mdi-printer"></span></button>
     <button type="button" class="btn btn-light border ripple" ng-click="finder.open()"><span class="mdi mdi-note-search"></span></button>
-    <button type="button" class="btn btn-light border ripple" aria-controls="offcanvasScrolling" data-bs-toggle="offcanvas" data-bs-target="#terminal" aria-controls="terminal"><span class="mdi mdi-console-line"></span></button>
+    <button type="button" class="btn btn-light border ripple" aria-controls="offcanvasScrolling" ng-click="cmd.select()" data-bs-toggle="offcanvas" data-bs-target="#terminal" aria-controls="terminal"><span class="mdi mdi-console-line"></span></button>
     <button type="button" class="btn btn-light border ripple" ng-click="select_location()"><span class="mdi mdi-magnify"></span></span></button>
     <input class="form-control" type="text" ng-model="location" id="location">
     <button type="submit" ng-click="navigate()" class="btn btn-text border ripple">Go</button>
