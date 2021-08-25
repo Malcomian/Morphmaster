@@ -1,11 +1,21 @@
 class MD {
   constructor() {}
+  /**
+   * Get markdown file contents using $.ajax
+   * @param {string} url location to read markdown file from
+   * @param {Function} callback a callback function to call on a successful ajax call
+   */
   get(url, callback) {
     $.ajax({
       url: url,
       success: callback
     })
   }
+  /**
+   * Render markdown file
+   * @param {string} contents markdown file contents
+   * @returns {string} html string
+   */
   render(contents) {
     let hljs = require('highlight.js')
     let markdown = require('markdown-it')({
