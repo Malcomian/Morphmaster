@@ -19,7 +19,6 @@ module.exports = function ($scope, $rootScope) {
   var vm = {}
   var root = require('../../_main/controllers/_main_controller')
   /*...*/
-
   root.md.get('../readme.md', (data) => {
     $('#readme').html(root.md.render(data))
   })

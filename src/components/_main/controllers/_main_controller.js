@@ -135,10 +135,10 @@ module.exports = function ($scope, $rootScope) {
     }
   })
 
-  var project = require('../../../../package.json')
+  // get project info
+  root.project = require('../../../../package.json')
   console.log(`project info:`)
-  console.log(project)
-  root.project = project
+  console.log(root.project)
 
   root.$on('$locationChangeStart', (event) => {
     console.log('changing location...')
