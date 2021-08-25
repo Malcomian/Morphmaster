@@ -29,7 +29,6 @@ module.exports = {
   _,
   bootstrap,
   server,
-  finder,
   ace,
 }
 /*...*/
