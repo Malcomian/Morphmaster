@@ -49,37 +49,7 @@ module.exports = function ($scope, $rootScope) {
   root.display_context = display_context
 
   // terminal commands
-  root.cmd = {
-    input: '',
-    lead: '',
-    select: () => {
-      document.getElementById('terminal-input').focus()
-      document.getElementById('terminal-input').select()
-    },
-    parse: () => {
-      console.log('parsing command...')
-      console.log($('#terminal-input').val())
-      $('#terminal-input').val('')
-      $('#terminal-input-lead').val('')
-    },
-    interpret: () => {
-      console.log('interpreting command...')
-      let command = $('#terminal-input').val()
-      if ((command) == 'hi') {
-        root.cmd.lead = '  !!!'
-      } else {
-        root.cmd.lead = ''
-      }
-    },
-    tab_complete: () => {
-      console.log('tab completion!')
-      let command = $('#terminal-input').val()
-      let lead = $('#terminal-input-lead').val()
-      lead = lead.trim()
-      $('#terminal-input').val(`${command}${lead}`)
-      $('#terminal-input-lead').val('')
-    }
-  }
+  root.cmd = require('../../../models/cmd')
 
   // any time escape is pressed, blur the active element at least
   document.addEventListener('keydown', (event) => {
