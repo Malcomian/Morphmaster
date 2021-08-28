@@ -24,8 +24,13 @@ var cmd = {
     console.log('interpreting command...')
     let command = $('#terminal-input').val()
     if ((command) == 'hi') {
-      this.auto = '  !!!'
       console.log(`found command, ${command}`)
+      let blank = ' '
+      let whitespace = ''
+      for (let i = 0; i < command.length; i++) {
+        whitespace += blank
+      }
+      this.auto = `${whitespace}!!!`
     } else {
       this.auto = ''
     }
