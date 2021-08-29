@@ -34,3 +34,20 @@ document.getElementById('terminal-input').addEventListener('keydown', (event) =>
   ```
 
 🥱 Okay, I fixed some issues, but the animations could still be better...
+
+❗ There should be a sort of simplified system of accepting autocomplete arrays...
+
+... it would be cool to be able to alter these arrays of options on the fly somehow. The notation should probably be the same as any old doc for a command list.
+
+```text
+roll [phrases]
+time <set, tick, advance, etc>
+load
+nav <locations>
+```
+
+Would be extra-amazing if there was a special array of commands that are saved, but each command has some extra info about itself. Like, a command gets parsed just like any other args parsing algo... or maybe I'm overthinking this. It would still be useful to use some string to args utility.
+
+The issue is getting to the point where you're multiple layers deep into some tab completion thing... I'm not sure how to structure this data to make it work best.
+
+❗ Needs a command history - use up/down to browse.
