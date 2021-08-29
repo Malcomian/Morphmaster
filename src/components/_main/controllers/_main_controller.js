@@ -61,9 +61,26 @@ module.exports = function ($scope, $rootScope) {
   // handle what happens when tab is pressed when inside the terminal input
   // should have some logic to replace terminal input text with the leading terminal input text
   document.getElementById('terminal-input').addEventListener('keydown', (event) => {
+    switch (event.code) {
+      case 'Tab':
+        event.preventDefault()
+        root.cmd.tab_complete()
+        break;
+      case 'ArrowUp':
+        event.preventDefault()
+        console.log('up')
+        root.cmd.up()
+        break;
+      case 'ArrowDown':
+        event.preventDefault()
+        console.log('down')
+        root.cmd.down()
+        break;
+      default:
+        break;
+    }
     if (event.code === 'Tab') {
-      event.preventDefault()
-      root.cmd.tab_complete()
+
     }
   }, false)
 

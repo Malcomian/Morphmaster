@@ -84,12 +84,13 @@
           <div class="input-group">
             <button type="button" class="btn btn-light border ripple"  ng-click="cmd.select()"><span class="mdi mdi-console-line"></span></button>
             <input type="text" id="terminal-input" class="form-control bg-transparent" ng-change="cmd.interpret()" ng-model="cmd.input">
+            <button ng-click="cmd.tab_complete()" type="button" class="btn btn-light border ripple"><span class="mdi mdi-auto-fix"></span></button>
+            <button ng-click="cmd.up()" type="button" class="btn btn-light border ripple"><span class="mdi mdi-arrow-up-thick"></span></button>
+            <button ng-click="cmd.down()" type="button" class="btn btn-light border ripple"><span class="mdi mdi-arrow-down-thick"></span></button>
+            <button ng-click="cmd.parse()" type="button" class="btn btn-light border ripple"><span class="mdi mdi-play"></span></button>
           </div>
         </form>
       </div>
-      <!-- <div id="terminal-wrapper" class="position-absolute" ng-style="{'top': '64px', 'right': '0', 'left': '0', 'bottom': '0', 'height': '233px'}">
-        <div id="terminal-editor" class="editor position-absolute w-100 h-100"></div>
-      </div> -->
     </div>
   </div>
   <!-- Finder -->
