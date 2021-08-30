@@ -79,9 +79,6 @@ module.exports = function ($scope, $rootScope) {
       default:
         break;
     }
-    if (event.code === 'Tab') {
-
-    }
   }, false)
 
   // ! old terminal
