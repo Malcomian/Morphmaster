@@ -19,7 +19,7 @@
     "update-version": "node ./scripts/update_version.js"
   },
   "dependencies": {
-    "@mdi/font": "^5.8.55",
+    "@mdi/font": "^6.1.95",
     "@popperjs/core": "^2.9.3",
     "angular": "^1.8.2",
     "angular-animate": "^1.8.2",
@@ -43,7 +43,7 @@
     "abjure": "^0.1.1",
     "chokidar-cli": "^3.0.0",
     "commander": "^8.1.0",
-    "electron": "^13.2.2",
+    "electron": "^14.0.0",
     "electron-builder": "^22.11.7",
     "sass": "^1.38.1",
     "zipadeedoodah": "^1.0.2"

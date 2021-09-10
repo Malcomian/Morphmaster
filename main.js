@@ -13,8 +13,6 @@ const child_process = require('child_process')
 
 const path = require('path')
 
-app.allowRendererProcessReuse = true
-
 const app_name = require('./package.json').name
 
 const win_offset = 50 // the number of pixels to offset a new window by
