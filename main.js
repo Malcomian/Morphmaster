@@ -168,7 +168,7 @@ function create_window(options) {
   win.once('ready-to-show', () => {
     // win.setMenu(null); // resets the menu
     // ? if a url was given, send the redirect url to the target window
-    // ! this redirect ipc event needs to be placed here, otherwise the browser window will not have loaded yet!
+    // ! this redirect ipc/webContents event needs to be placed here, otherwise the browser window will not have loaded yet!
     if (options.url) {
       let url = options.url
       url = url.split('index.html').pop()
