@@ -22,32 +22,69 @@ Escape shouldn't mess you up out of the terminal window. It should just blur the
 
 I can fix this with vanilla javascript...
 
-  ```javascript
-document.getElementById('terminal-input').addEventListener('keydown', (event) => {
-  if (event.code === 'Tab') {
-    console.log('pressed tab')
-    event.preventDefault()
-  } else if (event.code === 'Escape') {
-    console.log('pressed escape')
-  }
-}, false)
-  ```
+```javascript
+document.getElementById("terminal-input").addEventListener(
+  "keydown",
+  (event) => {
+    if (event.code === "Tab") {
+      console.log("pressed tab");
+      event.preventDefault();
+    } else if (event.code === "Escape") {
+      console.log("pressed escape");
+    }
+  },
+  false
+);
+```
 
 🥱 Okay, I fixed some issues, but the animations could still be better...
 
-❗ There should be a sort of simplified system of accepting autocomplete arrays...
+❗ There should be a sort of simplified system of accepting autocomplete info... Like, analyzing multidimensional arrays might work. It's like I need to manage a list of "possibilities", as if it were a search bar. It would also be cool to include these actions in a menu, too.
 
 ... it would be cool to be able to alter these arrays of options on the fly somehow. The notation should probably be the same as any old doc for a command list.
 
 ```text
 roll [phrases]
 time <set, tick, advance, etc>
-load
+load?
 nav <locations>
+quit [countdown]
 ```
 
-Would be extra-amazing if there was a special array of commands that are saved, but each command has some extra info about itself. Like, a command gets parsed just like any other args parsing algo... or maybe I'm overthinking this. It would still be useful to use some string to args utility.
+... okay, so it would be like nested objects with the keys of the objects also being a list of what they should complete towards...
 
-The issue is getting to the point where you're multiple layers deep into some tab completion thing... I'm not sure how to structure this data to make it work best.
+```javascript
+var auto = {
+  roll: {
+    attack: {
+      //
+    },
+  },
+};
+```
 
-❗ Needs a command history - use up/down to browse.
+... or maybe a series of class-based objects with name properties and such. I guess it depends on whether I want immediate tab completion or the type of tab completion you see in a real terminal, where you can tab through multiple options...
+
+```javascript
+var auto = {
+  roll: ["melee", "ranged", "grapple"],
+  time: [{}]
+};
+```
+
+```javascript
+class Auto {
+  constructor(phrase, children) {
+    this.phrase = phrase
+    this.children = children
+  }
+}
+
+var completions = [
+  new Auto('roll', ['melee', 'ranged', 'grapple'])
+]
+```
+
+😫 As far as I can tell, the tab completion completely ruins the undo/redo states of the input. The only way to fix this is to intercept any input commands within the input field and set handlers for ctrl+z/ctrl+shift+z.
+
+❗ 😑 Needs a command history - use up/down to browse.
