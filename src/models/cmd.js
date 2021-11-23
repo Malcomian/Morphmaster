@@ -34,6 +34,10 @@ var cmd = {
   run(command) {
     console.log(command)
     $('#terminal-body').append($.parseHTML(`<div>> ${command}</div>`))
+    $('#terminal-body').animate({
+      scrollTop: $('#terminal-body')[0].scrollHeight
+    }, 'fast')
+    $('#terminal-body').scrollTop(99999)
   },
   /**
    * interprets commands
