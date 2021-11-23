@@ -15,7 +15,11 @@
       ],
       "filters": [
         "falsey",
-        "truthy"
+        "filesize",
+        "is_even",
+        "template",
+        "truthy",
+        "youtube"
       ]
     },
     {
