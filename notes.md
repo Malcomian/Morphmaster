@@ -85,6 +85,16 @@ var completions = [
 ]
 ```
 
+See, the main reason for the autocompletion thing needing to be customizable is that I need to be able to roll specially saved abilities and whatever from each character that's loaded into an encounter.
+
+```text
+roll @<target> <phrase or expression>
+```
+
 😫 As far as I can tell, the tab completion completely ruins the undo/redo states of the input. The only way to fix this is to intercept any input commands within the input field and set handlers for ctrl+z/ctrl+shift+z.
 
 ❗ 😑 Needs a command history - use up/down to browse.
+
+!!! so, as a rule, I should probably remind myself to not overuse filters. I think the template filters are silly and unnecessary. They should just be functions on the scope so you would write something like `{{youtube('code', 640, 480)}}` instead of `{{'code' | youtube:640, 480}}`. It's way more concise. The reason why I invented that filter was so that it would function as something akin to a template literal expression. I have to use $sce.trustAsHTML() to get the job done in the case of youtube embed codes. Any iframe falls under this effect inside angular, I think.
+
+If I were to find a way to use the app with only lodash and some jquery thing, then that'd be different. It would probably be an overall better approach anyways considering the complexity of some apps, but I definitely lose a lot of great features like debounce, filters, a nice frontend router, etc. - Angular certainly has it all.
